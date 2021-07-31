@@ -222,12 +222,12 @@ $(document).ready(function() {
 			String.prototype.replaceAll = function(str1, str2, ignore) {
 				return this.replace(new RegExp(str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g,"\\$&"),(ignore?"gi":"g")),(typeof(str2)=="string")?str2.replace(/\$/g,"$$$$"):str2);
 			} 
-			
+
 			$('head').append(`
 				<meta property="og:title" content="${video.title.replaceAll(`"`, "&quot;")} | Clip by ${e.recordedBy}" />
 				<meta property="og:url" content="${window.location.hostname}?v=${video.id}" />
-				<meta property="og:description" content="${video.game ? video.game : "Unknown game"} - ${video.people.join(', ')}\n${formatDate(e.dateRecorded)}" />
-				<meta property="og:image" content="${e.thumbnail.medium.url}" />
+				<meta property="og:description" content="${video.game ? video.game : "Unknown game"} - ${video.people.join(', ')}\n${formatDate(video.dateRecorded)}" />
+				<meta property="og:image" content="${video.thumbnail.medium.url}" />
 			`)
 
 			$('.main').append(`
