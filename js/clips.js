@@ -218,6 +218,15 @@ $(document).ready(function() {
 				<div class="error" style="border-top-left-radius: 0px; border-top-right-radius: 0px;margin:0px">Clip not found.</div>
 				`);
 			}
+			
+			$('head').append(`
+				<meta property="og:url" content="https://www.youtube.com/watch?v=${video.id}">
+				<meta property="og:video:type" content="text/html">
+				<meta property="og:video:url" content="https://www.youtube.com/embed/${video.id}">
+				<meta property="og:video:height" content="1080">
+				<meta property="og:video:width" content="1920">
+				<meta property="og:type" content="video.other">
+			`)
 
 			$('.main').append(`
 			<div class="back">< Back</div>
