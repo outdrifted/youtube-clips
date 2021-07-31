@@ -218,14 +218,16 @@ $(document).ready(function() {
 				<div class="error" style="border-top-left-radius: 0px; border-top-right-radius: 0px;margin:0px">Clip not found.</div>
 				`);
 			}
+
+			String.prototype.replaceAll = function(str1, str2, ignore) {
+				return this.replace(new RegExp(str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g,"\\$&"),(ignore?"gi":"g")),(typeof(str2)=="string")?str2.replace(/\$/g,"$$$$"):str2);
+			} 
 			
 			$('head').append(`
-				<meta property="og:url" content="https://www.youtube.com/watch?v=${video.id}">
-				<meta property="og:video:type" content="text/html">
-				<meta property="og:video:url" content="https://www.youtube.com/embed/${video.id}">
-				<meta property="og:video:height" content="1080">
-				<meta property="og:video:width" content="1920">
-				<meta property="og:type" content="video.other">
+				<meta property="og:title" content="${video.title.replaceAll(`"`, "&quot;")} | Clip by ${e.recordedBy}" />
+				<meta property="og:url" content="${window.location.hostname}?v=${video.id}" />
+				<meta property="og:description" content="${video.game ? video.game : "Unknown game"} - ${video.people.join(', ')}\n${formatDate(e.dateRecorded)}" />
+				<meta property="og:image" content="${e.thumbnail.medium.url}" />
 			`)
 
 			$('.main').append(`
