@@ -182,14 +182,19 @@ $(document).ready(function() {
 				var vid_desc = "";
 				var vid_game = `<div class="video-game">‎</div>`;
 				var vid_people = "";
+				var vid_new = ``;
 	
 				if (video.description) vid_desc = `<div class="video-description">"${video.description}"</div>`
 				if (video.game) vid_game = `<div class="video-game">${video.game}</div>`
+				if (video.dateAddedAgo < 432000000) var vid_new = `<div class="new-clip">NEW!</div>`;
 				//if (video.people && video.people.length) vid_people = `<div class="video-people">${video.people.join(', ')}</div>`
 	
 				$('.video-list').append(`
 				<div class="video" id="clip-${video.id}">
+					<div>
+					${vid_new}
 					<img class="video-thumbnail" draggable="false" src="${video.thumbnail.medium.url}"></img>
+					</div>
 					<div class="description">
 						<div>
 							<div class="video-title">${video.title}</div>
@@ -236,14 +241,35 @@ $(document).ready(function() {
 				<div class="video-player-loading">Loading...</div>
 				<iframe class="video-player" src="https://www.youtube.com/embed/${urlVideo}?rel=0&amp;playlist=${urlVideo}&amp;loop=1&amp;autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>
 			</div>
+
+
 			<div class="video-info">
-			<div><b>Title: </b>${video.title}</div>
-			<div><b>Description: </b>${video.description || "No description specified."}</div>
-			<div><b>Game: </b>${video.game || "No game specified."}</div>
-			<div><b>People: </b>${video.people ? video.people.join(', ') : "No people specified."}</div>
-			<div><b>Recorded by: </b>${video.recordedBy}</div>
-			<div><b>Date uploaded: </b>${formatDateWithTime(video.dateAdded)}</div>
-			<div><b>Date recorded: </b>${video.dateRecorded ? formatDate(video.dateRecorded) : "No date specified."}</div>
+			<div id="main-desc">
+			<div id="vid-title">${video.title}</div>
+			<div id="vid-desc">${video.description ? `"${video.description}"` : ""}</div>
+			</div>
+				<table>
+					<tr>
+						<td>Game</td>
+						<td>${video.game || "No game specified."}</td>
+					</tr>
+					<tr>
+						<td>People in clip</td>
+						<td>${video.people ? video.people.join(', ') : "No people specified."}</td>
+					</tr>
+					<tr>
+						<td>Recorded by</td>
+						<td>${video.recordedBy}</td>
+					</tr>
+					<tr>
+						<td>Date uploaded</td>
+						<td>${formatDateWithTime(video.dateAdded)}</td>
+					</tr>
+					<tr>
+						<td>Date recorded</td>
+						<td>${video.dateRecorded ? formatDate(video.dateRecorded) : "No date specified."}</td>
+					</tr>
+				</table>
 			</div>
 			`)
 		}
@@ -333,76 +359,6 @@ $(document).ready(function() {
 			//#endregion
 
 			videoList.push(r)
-
-			//#region 
-			/*
-			if (video.snippet.description.includes("This video is")) return r;
-
-			var desc = video.snippet.description.substring(0, 260);
-			var vid = video.snippet.resourceId.videoId;
-			var game = desc.split(';')[0];
-			var desc = desc.substring(desc.indexOf(";") + 1);
-			var date_ = desc.split(';')[1];
-			var desc = video.snippet.description.substring(0, 260);
-			var desc = desc.substring(desc.indexOf(";") + 1).split(';')[0];
-			var atributes = video.snippet.description.substring(video.snippet.description.lastIndexOf(";") + 1);
-			var unixDate = parseInt((new Date(date_).getTime() / 1000).toFixed(0));
-			var addedToPlaylist_ = video.snippet.publishedAt
-			
-			//addedToPlaylistMS_
-			var a = new Date(addedToPlaylist_);
-			var b = new Date();
-			var addedToPlaylistMS_ = Math.abs(b-a);
-
-			var people = [];
-			if (atributes.includes("people(")) {
-				var searchFor = `people(`;
-				var len = searchFor.length;
-
-				var users = atributes.substring(
-					atributes.lastIndexOf(searchFor) + len, 
-					atributes.indexOf(")", atributes.lastIndexOf(searchFor) + len)
-				);
-				people = users.split(',');
-			}
-			if (people) {
-				people.forEach(e => {
-					if (game == urlGame) {
-						//peopleInVideosTotal.push(e);
-					}
-				})
-			}
-
-			var recordedby = "";
-			if (atributes.includes("recordedBy(")) {
-				var searchFor = `recordedBy(`;
-				var len = searchFor.length;
-
-				var recorder = atributes.substring(
-					atributes.lastIndexOf(searchFor) + len, 
-					atributes.indexOf(")", atributes.lastIndexOf(searchFor) + len)
-				);
-				recordedby = recorder;
-			}
-
-			r = {
-				title: video.snippet.title,
-				description: desc,
-				thumbnail: video.snippet.thumbnails.medium.url,
-				game: game,
-				id: vid,
-				dateUnix: unixDate,
-				date: date_,
-				attr: atributes,
-				people: people.sort(),
-				recordedBy: recordedby,
-				addedToPlaylist: addedToPlaylist_,
-				addedToPlaylistAgo: addedToPlaylistMS_
-			};
-			*/
-			//#endregion
-
-			//videoList.push(r);
 		});
 
 		return videoList;
