@@ -133,6 +133,7 @@ body {
 .video-title {
 	font-size: 23px !important;
 	line-height: 23px !important;
+	margin-top: -3px;
 	padding-bottom: 5px;
 	font-weight: 400;
 }
