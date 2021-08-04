@@ -108,7 +108,8 @@ body {
 
 .video-footer * {
 	color: #a5a5a5;
-	line-height: 16px;
+	line-height: 18px;
+	margin-bottom: -3px;
 }
 
 .video-date {
@@ -119,12 +120,13 @@ body {
 .video-description {
 	font-style: italic;
 	font-weight: lighter;
+	padding-bottom: 5px;
 }
 
 .video-game {
 	text-align: right;
 	white-space: nowrap;
-	overflow: hidden; 
+	overflow: hidden;
 	text-overflow: ellipsis;
 }
 
