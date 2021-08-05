@@ -77,6 +77,33 @@ body {
 	display: inline-block;
 }
 
+.video_people_detailed_list {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.video_people_detailed::after {
+	content: ", ";
+	white-space:pre;
+}
+
+.video_people_detailed:last-child::after {
+	content: "";
+}
+
+.video_people_detailed img {
+	height: 1rem !important;
+	vertical-align: middle;
+	display: inline-block;
+	margin-right: 2px;
+	border-radius: 5px;
+	margin-left: 3px;
+}
+
+.video_people_detailed img:first-child {
+	margin-left: 0px;
+}
+
 .new-clip {
 	background-color: #310000;
 	border-width: 4px;

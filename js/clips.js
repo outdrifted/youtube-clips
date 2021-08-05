@@ -225,7 +225,7 @@ $(document).ready(function() {
 
 			String.prototype.replaceAll = function(str1, str2, ignore) {
 				return this.replace(new RegExp(str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g,"\\$&"),(ignore?"gi":"g")),(typeof(str2)=="string")?str2.replace(/\$/g,"$$$$"):str2);
-			} 
+			}
 
 			$('head').append(`
 				<meta property="og:title" content="${video.title.replaceAll(`"`, "&quot;")} | Clip by ${video.recordedBy}" />
@@ -242,6 +242,28 @@ $(document).ready(function() {
 			if (gameLib[video.game] && gameLib[video.game].link) {
 				game_linkstart = `<a href="${gameLib[video.game].link}">`;
 				game_linkend = `</a>`;
+			}
+
+			//${video.people ? video.people.join(', ') : "No people specified."}
+			var video_people = "No people specified";
+			if (video.people) {
+				var html = `<div class="video_people_detailed_list">`;
+				video.people.forEach(person => {
+					/*
+					for (const [key, val] of Object.entries(nameLib)) {
+						if (val.aliases.includes(r.recordedBy.toLowerCase())) r.recordedBy = key;
+					}
+					*/
+					if (nameLib[person]) {
+						html += `<div class="video_people_detailed"><img src="${nameLib[person].icon}"></img><a href="${nameLib[person].link}">${person}</a></div>`;
+					} else html += `<div class="video_people_detailed">${person}</div>`;
+				})
+				video_people = html + `</div>`;
+			}
+
+			var video_recordedby = video.recordedBy;
+			if (nameLib[video_recordedby]) {
+				video_recordedby = `<div class="video_people_detailed"><img src="${nameLib[video_recordedby].icon}"></img><a href="${nameLib[video_recordedby].link}">${video_recordedby}</a></div>`;
 			}
 
 			$('.main').append(`
@@ -264,11 +286,11 @@ $(document).ready(function() {
 						</tr>
 						<tr>
 							<td>People in clip</td>
-							<td>${video.people ? video.people.join(', ') : "No people specified."}</td>
+							<td>${video_people}</td>
 						</tr>
 						<tr>
 							<td>Recorded by</td>
-							<td>${video.recordedBy}</td>
+							<td>${video_recordedby}</td>
 						</tr>
 						<tr>
 							<td>Date uploaded</td>
@@ -314,6 +336,7 @@ $(document).ready(function() {
 
 				r.people = r.people.map(s => s.trim());
 
+				/*
 				var peopleArray = [];
 				r.people.forEach(person => {
 					var name = person;
@@ -325,6 +348,18 @@ $(document).ready(function() {
 								return peopleArray.push(key);
 							}
 						}
+					}
+					peopleArray.push(name);
+				})
+				r.people = peopleArray;
+				r.people.sort();
+				*/
+
+				var peopleArray = [];
+				r.people.forEach(person => {
+					var name = person;
+					for (const [key, val] of Object.entries(nameLib)) {
+						if (val.aliases.includes(name.toLowerCase())) name = key;
 					}
 					peopleArray.push(name);
 				})
@@ -378,6 +413,7 @@ $(document).ready(function() {
 					description.indexOf(")", description.lastIndexOf(searchFor) + len)
 				);
 
+				/*
 				for (const key in nameLib) {
 					if (Object.hasOwnProperty.call(nameLib, key)) {
 						const e = nameLib[key];
@@ -387,8 +423,13 @@ $(document).ready(function() {
 						}
 					}
 				}
+				*/
+				for (const [key, val] of Object.entries(nameLib)) {
+					if (val.aliases.includes(r.recordedBy.toLowerCase())) r.recordedBy = key;
+				}
 			} else {
 				r.recordedBy = 'yummy';
+				/*
 				for (const key in nameLib) {
 					if (Object.hasOwnProperty.call(nameLib, key)) {
 						const e = nameLib[key];
@@ -397,6 +438,10 @@ $(document).ready(function() {
 							r.recordedBy = key;
 						}
 					}
+				}
+				*/
+				for (const [key, val] of Object.entries(nameLib)) {
+					if (val.aliases.includes(r.recordedBy.toLowerCase())) r.recordedBy = key;
 				}
 			}
 
