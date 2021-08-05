@@ -18,5 +18,35 @@ const gameLib = {
 		"aliases": ["sot"],
 		"link": "https://store.steampowered.com/app/1172620/Sea_of_Thieves/",
 		"icon": "https://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/1172620/f95f362708fc326511c5d86566c447ee625bf776.jpg"
+	},
+	"Raft": {
+		"aliases": ["raft"],
+		"link": "https://store.steampowered.com/app/648800/Raft/",
+		"icon": "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/648800/6a9ae357c4133b1b631b520edd25b1974f3afb68.jpg"
+	},
+	"Human Fall Flat": {
+		"aliases": ["human fall flat", "hff"],
+		"link": "https://store.steampowered.com/app/477160/Human_Fall_Flat/",
+		"icon": "https://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/477160/15c6f6a4d69633a63ee410b24a2417f16d803b06.jpg"
+	},
+	"R6S": {
+		"aliases": ["r6s", "rainbow six siege"],
+		"link": "https://store.steampowered.com/app/359550/Tom_Clancys_Rainbow_Six_Siege/",
+		"icon": "https://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/359550/43a47cd1ff04838e19d829559544c88715ed74cd.jpg"
+	},
+	"Tower Unite": {
+		"aliases": ["tower unite", "tu"],
+		"link": "https://store.steampowered.com/app/394690/Tower_Unite/",
+		"icon": "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/394690/53c78cd39b2421412fd367214f26c453714e6225.jpg"
+	},
+	"Factorio": {
+		"aliases": ["factorio"],
+		"link": "https://store.steampowered.com/app/427520/Factorio/",
+		"icon": "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/427520/267f5a89f36ab287e600a4e7d4e73d3d11f0fd7d.jpg"
+	},
+	"UNO": {
+		"aliases": ["uno"],
+		"link": "https://store.steampowered.com/app/470220/UNO/",
+		"icon": "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/470220/8714f533f03a77d88905b44e56b905e637478e75.jpg"
 	}
 }

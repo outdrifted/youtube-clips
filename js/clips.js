@@ -182,16 +182,21 @@ $(document).ready(function() {
 				var vid_game = `<div class="video-game">‎</div>`;
 				var vid_people = "";
 				var vid_new = ``;
+				var vid_highlight = ``;
 	
 				if (video.description) vid_desc = `<div class="video-description">"${video.description}"</div>`
 				if (video.game) vid_game = `<div class="video-game">${video.game}</div>`
 				if (video.dateAddedAgo < 432000000) var vid_new = `<div class="new-clip">NEW!</div>`;
+				if (video.highlight) vid_highlight = `<div class="clip_highlighted_popout">🔥</div>`;
 				//if (video.people && video.people.length) vid_people = `<div class="video-people">${video.people.join(', ')}</div>`
 	
 				$('.video-list').append(`
-				<div class="video" id="clip-${video.id}">
+				<div class="video ${video.highlight ? "clip_highlighted" : ""}" id="clip-${video.id}">
 					<div>
+					<div class="popouts">
 					${vid_new}
+					${vid_highlight}
+					</div>
 					<img class="video-thumbnail" draggable="false" src="${video.thumbnail.medium.url}"></img>
 					</div>
 					<div class="description">
@@ -212,6 +217,8 @@ $(document).ready(function() {
 			if ($('.video-list').children().length == 0) {
 				$('.main').append(`<div class="error">No clips found.</div>`)
 			}
+
+			$('title').html($(`#select-game`).find(':selected').val() ? `${$(`#select-game`).find(':selected').val()} - Clips` : "Clips");
 		} else {
 			// Video specified
 			var video = videos.find(v => v.id == urlVideo);
@@ -234,10 +241,14 @@ $(document).ready(function() {
 				<meta property="og:image" content="${video.thumbnail.medium.url}" />
 			`)
 
+			$('title').html(`${video.title.replaceAll(`"`, "&quot;")} - Clips`);
+
 			var newclip = "";
-			if (video.private) newclip = `<span title="This clip won't show up in the clip list. It can only be accessed via direct link." id="clip-alert">Private clip</span>`;
+			if (video.private) newclip = `<span title="This clip won't show up in the clip list. It can only be accessed via direct link." class="clip-alert">Private clip</span>`;
+			var highclip = "";
+			if (video.highlight) highclip = `<span title="This clip will be highlighted in the clip list." class="clip-highlighted-alert">Highlighted clip</span>`;
 			var gameicon = "";
-			if (gameLib[video.game] && gameLib[video.game].icon) gameicon = `<span class="game-icon"><img src="${gameLib[video.game].icon}"></img></span>`;
+			if (gameLib[video.game] && gameLib[video.game].icon) gameicon = `<span class="game-icon"><img draggable="false" src="${gameLib[video.game].icon}"></img></span>`;
 			var game_linkstart = "", game_linkend = "";
 			if (gameLib[video.game] && gameLib[video.game].link) {
 				game_linkstart = `<a href="${gameLib[video.game].link}">`;
@@ -255,7 +266,7 @@ $(document).ready(function() {
 					}
 					*/
 					if (nameLib[person]) {
-						html += `<div class="video_people_detailed"><img src="${nameLib[person].icon}"></img><a href="${nameLib[person].link}">${person}</a></div>`;
+						html += `<div class="video_people_detailed"><a href="${nameLib[person].link}"><img draggable="false" src="${nameLib[person].icon}"></img>${person}</a></div>`;
 					} else html += `<div class="video_people_detailed">${person}</div>`;
 				})
 				video_people = html + `</div>`;
@@ -263,7 +274,7 @@ $(document).ready(function() {
 
 			var video_recordedby = video.recordedBy;
 			if (nameLib[video_recordedby]) {
-				video_recordedby = `<div class="video_people_detailed"><img src="${nameLib[video_recordedby].icon}"></img><a href="${nameLib[video_recordedby].link}">${video_recordedby}</a></div>`;
+				video_recordedby = `<div class="video_people_detailed"><a href="${nameLib[video_recordedby].link}"><img draggable="false" src="${nameLib[video_recordedby].icon}"></img>${video_recordedby}</a></div>`;
 			}
 
 			$('.main').append(`
@@ -276,13 +287,13 @@ $(document).ready(function() {
 
 				<div class="video-info">
 				<div id="main-desc">
-				<div id="vid-title">${video.title}${newclip}</div>
+				<div id="vid-title">${video.title}<div class="clip-alerts">${newclip}${highclip}</div></div>
 				<div id="vid-desc">${video.description ? `"${video.description}"` : ""}</div>
 				</div>
 					<table>
 						<tr>
 						<td>Game</td>
-							<td>${gameicon} ${game_linkstart}${video.game || "No game specified."}${game_linkend}</td>
+							<td>${game_linkstart}${gameicon}${video.game || "No game specified."}${game_linkend}</td>
 						</tr>
 						<tr>
 							<td>People in clip</td>
@@ -461,6 +472,10 @@ $(document).ready(function() {
 			if (description.includes("private()")) {
 				r.private = true;
 			} else { r.private = false }
+
+			if (description.includes("highlight()")) {
+				r.highlight = true;
+			} else { r.highlight = false }
 			//#endregion
 
 			videoList.push(r)
