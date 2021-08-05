@@ -237,9 +237,9 @@ $(document).ready(function() {
 			var newclip = "";
 			if (video.private) newclip = `<span title="This clip won't show up in the clip list. It can only be accessed via direct link." id="clip-alert">Private clip</span>`;
 			var gameicon = "";
-			if (gameLib[video.game].icon) gameicon = `<span class="game-icon"><img src="${gameLib[video.game].icon}"></img></span>`;
+			if (gameLib[video.game] && gameLib[video.game].icon) gameicon = `<span class="game-icon"><img src="${gameLib[video.game].icon}"></img></span>`;
 			var game_linkstart = "", game_linkend = "";
-			if (gameLib[video.game].link) {
+			if (gameLib[video.game] && gameLib[video.game].link) {
 				game_linkstart = `<a href="${gameLib[video.game].link}">`;
 				game_linkend = `</a>`;
 			}
