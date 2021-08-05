@@ -17,7 +17,13 @@ $(document).ready(function() {
 		if (data == "") return null;
 		return decodeURI(data);
 	})();
-
+	const urlSorting = (function() {
+		if (urlData == null) return null;
+		var data = urlData.split('?s=').pop().split('?')[0];
+		if (data == "") return null;
+		return decodeURI(data);
+	})();
+	/*
 	const urlPeople = (function() {
 		if (urlData == null) return null;
 		var data = urlData.split('?p=').pop().split('?')[0];
@@ -30,12 +36,6 @@ $(document).ready(function() {
 		if (data == "") return null;
 		return decodeURI(data).split('&').map(s => s.trim()).sort()
 	})();
-	const urlSorting = (function() {
-		if (urlData == null) return null;
-		var data = urlData.split('?s=').pop().split('?')[0];
-		if (data == "") return null;
-		return decodeURI(data);
-	})();
 	const urlDate = (function() {
 		if (urlData == null) return null;
 		var data = urlData.split('?d=').pop().split('?')[0];
@@ -45,6 +45,7 @@ $(document).ready(function() {
 		data[1] += `T23:59:59Z`
 		return data;
 	})();
+	*/
 	//#endregion
 
 	getVideos(null);
@@ -123,8 +124,6 @@ $(document).ready(function() {
 		}
 		const videos = formatVideos(removeUnavailable(data)).sort(sortByProperty(`${sortingReverse}${sortingProperty}`));
 		const videosNoPrivate = removePrivates(videos);
-
-		console.log(videosNoPrivate);
 
 		$(`.loading`).remove();
 		
@@ -235,41 +234,52 @@ $(document).ready(function() {
 				<meta property="og:image" content="${video.thumbnail.medium.url}" />
 			`)
 
+			var newclip = "";
+			if (video.private) newclip = `<span title="This clip won't show up in the clip list. It can only be accessed via direct link." id="clip-alert">Private clip</span>`;
+			var gameicon = "";
+			if (gameLib[video.game].icon) gameicon = `<span class="game-icon"><img src="${gameLib[video.game].icon}"></img></span>`;
+			var game_linkstart = "", game_linkend = "";
+			if (gameLib[video.game].link) {
+				game_linkstart = `<a href="${gameLib[video.game].link}">`;
+				game_linkend = `</a>`;
+			}
+
 			$('.main').append(`
-			<div class="back">< Back</div>
-			<div class="video-player-wrapper">
-				<div class="video-player-loading">Loading...</div>
-				<iframe class="video-player" src="https://www.youtube.com/embed/${urlVideo}?rel=0&amp;playlist=${urlVideo}&amp;loop=1&amp;autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>
-			</div>
+			<div class="vid-direct">
+				<div class="back">< Back</div>
+				<div class="video-player-wrapper">
+					<div class="video-player-loading">Loading...</div>
+					<iframe class="video-player" src="https://www.youtube.com/embed/${urlVideo}?rel=0&amp;playlist=${urlVideo}&amp;loop=1&amp;autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>
+				</div>
 
-
-			<div class="video-info">
-			<div id="main-desc">
-			<div id="vid-title">${video.title}</div>
-			<div id="vid-desc">${video.description ? `"${video.description}"` : ""}</div>
-			</div>
-				<table>
-					<tr>
+				<div class="video-info">
+				<div id="main-desc">
+				<div id="vid-title">${video.title}${newclip}</div>
+				<div id="vid-desc">${video.description ? `"${video.description}"` : ""}</div>
+				</div>
+					<table>
+						<tr>
 						<td>Game</td>
-						<td>${video.game || "No game specified."}</td>
-					</tr>
-					<tr>
-						<td>People in clip</td>
-						<td>${video.people ? video.people.join(', ') : "No people specified."}</td>
-					</tr>
-					<tr>
-						<td>Recorded by</td>
-						<td>${video.recordedBy}</td>
-					</tr>
-					<tr>
-						<td>Date uploaded</td>
-						<td>${formatDateWithTime(video.dateAdded)}</td>
-					</tr>
-					<tr>
-						<td>Date recorded</td>
-						<td>${video.dateRecorded ? formatDate(video.dateRecorded) : "No date specified."}</td>
-					</tr>
-				</table>
+							<td>${gameicon} ${game_linkstart}${video.game || "No game specified."}${game_linkend}</td>
+						</tr>
+						<tr>
+							<td>People in clip</td>
+							<td>${video.people ? video.people.join(', ') : "No people specified."}</td>
+						</tr>
+						<tr>
+							<td>Recorded by</td>
+							<td>${video.recordedBy}</td>
+						</tr>
+						<tr>
+							<td>Date uploaded</td>
+							<td>${formatDateWithTime(video.dateAdded)}</td>
+						</tr>
+						<tr>
+							<td>Date recorded</td>
+							<td>${video.dateRecorded ? formatDate(video.dateRecorded) : "No date specified."}</td>
+						</tr>
+					</table>
+				</div>
 			</div>
 			`)
 		}
@@ -302,7 +312,24 @@ $(document).ready(function() {
 					description.indexOf(")", description.lastIndexOf(searchFor) + len)
 				).split(',');
 
-				r.people = r.people.map(s => s.trim()).sort();
+				r.people = r.people.map(s => s.trim());
+
+				var peopleArray = [];
+				r.people.forEach(person => {
+					var name = person;
+					for (const key in nameLib) {
+						if (Object.hasOwnProperty.call(nameLib, key)) {
+							const e = nameLib[key];
+
+							if (e.includes(person.toLowerCase())) {
+								return peopleArray.push(key);
+							}
+						}
+					}
+					peopleArray.push(name);
+				})
+				r.people = peopleArray;
+				r.people.sort();
 			} else { r.people = [] }
 
 			if (description.includes("game(")) {
@@ -313,6 +340,23 @@ $(document).ready(function() {
 					description.lastIndexOf(searchFor) + len, 
 					description.indexOf(")", description.lastIndexOf(searchFor) + len)
 				);
+				
+				/*
+				for (const key in gameLib.aliases) {
+					console.log(key)
+					if (Object.hasOwnProperty.call(gameLib.aliases, key)) {
+						const e = gameLib.aliases[key];
+
+						if (e.includes(r.game.toLowerCase())) {
+							r.game = key;
+						}
+					}
+				}
+				*/
+
+				for (const [game, props] of Object.entries(gameLib)) {
+					if (props.aliases.includes(r.game.toLowerCase())) r.game = game;
+				}
 			} else { r.game = "Other" }
 
 			if (description.includes("description(")) {
@@ -333,7 +377,28 @@ $(document).ready(function() {
 					description.lastIndexOf(searchFor) + len, 
 					description.indexOf(")", description.lastIndexOf(searchFor) + len)
 				);
-			} else { r.recordedBy = 'yummy' }
+
+				for (const key in nameLib) {
+					if (Object.hasOwnProperty.call(nameLib, key)) {
+						const e = nameLib[key];
+
+						if (e.includes(r.recordedBy.toLowerCase())) {
+							r.recordedBy = key;
+						}
+					}
+				}
+			} else {
+				r.recordedBy = 'yummy';
+				for (const key in nameLib) {
+					if (Object.hasOwnProperty.call(nameLib, key)) {
+						const e = nameLib[key];
+
+						if (e.includes(r.recordedBy.toLowerCase())) {
+							r.recordedBy = key;
+						}
+					}
+				}
+			}
 
 			if (description.includes("date(")) {
 				var searchFor = `date(`;
@@ -351,11 +416,6 @@ $(document).ready(function() {
 			if (description.includes("private()")) {
 				r.private = true;
 			} else { r.private = false }
-
-			/* Shares the video to Discord */
-			if (description.includes("share()")) {
-				r.share = true;
-			} else { r.share = false }
 			//#endregion
 
 			videoList.push(r)
@@ -441,18 +501,12 @@ $(document).ready(function() {
         window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
-	function sortUpdate() {
-		console.log('sumthin changed :))DDD');
-	}
-
 	$( "#select-sort, #select-game" ).change(function() {
 		var sort = $('#select-sort').find(":selected").val();
 		var game = $('#select-game').find(":selected").val();
 
 		if (game) game = `?g=${game}`
 		if (sort) sort = `?s=${sort}`
-
-		console.log(sort, game)
 
 		var url = window.location.href.split('?')[0];
 		window.location.href = `${url}${game}${sort}`
