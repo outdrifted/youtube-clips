@@ -45,7 +45,7 @@ const nameLib = {
 		"icon": "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/avatars/37/37c7384f6c967939e5fcdd8a14619a752a0c3b75_full.jpg"
 	},
 	"Passat Rider": {
-		"aliases": ["Perceptionist"],
+		"aliases": ["perceptionist"],
 		"link": "https://steamcommunity.com/profiles/76561198130847328",
 		"icon": "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/avatars/63/636f518ade48d116c8a99896592df55c83a64c84_full.jpg"
 	},
