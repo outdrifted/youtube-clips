@@ -11,6 +11,12 @@ $(document).ready(function() {
 		if (data == "") return null;
 		return decodeURI(data);
 	})();
+	const urlUploader = (function() {
+		if (urlData == null) return null;
+		var data = urlData.split('?u=').pop().split('?')[0];
+		if (data == "") return null;
+		return decodeURI(data);
+	})();
 	const urlVideo = (function() {
 		if (urlData == null) return null;
 		var data = urlData.split('?v=').pop().split('?')[0];
@@ -47,90 +53,6 @@ $(document).ready(function() {
 	})();
 	*/
 	//#endregion
-
-	/*
-	getVideos(null);
-	function getVideos(token) {
-		var options = {
-			part: 'snippet',
-			key: 'AIzaSyCb62u0hNUTyUtcdOi-VbZtSNtisI7uCB0',
-			maxResults: 50,
-			playlistId: 'PLeRA6x39PellI87s8Qh6s8ETDlpzsrAI0',
-			url: 'https://www.googleapis.com/youtube/v3/playlistItems'
-		}
-
-		if (token != null) {options.pageToken = token}
-
-		$.getJSON(options.url, options, function (data) {
-			//vids = data;
-			//if ('nextPageToken' in data) {} else {reachLastPage = true;}
-			tokenChecker(data);
-		})
-	}
-
-	var storage = [];
-	function tokenChecker(data) {
-		storage.push(data);
-		if ('nextPageToken' in data) {getVideos(data.nextPageToken)} else {videoMerge(storage)}
-	}
-
-	function videoMerge(data) {
-		if (data.length > 1) {
-			var result = null;
-			data.forEach(e => {
-				if (result == null) return result = e;
-				e.items.forEach(i => {
-					result.items.push(i)
-				})
-			})
-			main(result);
-		} else {
-			main(data[0]);
-		}
-	}
-	*/
-
-	/*
-	(async function() {
-		async function getVids() {
-			var resp = [];
-
-			for (const playlist of playlists) {
-				await getVideos(null);
-				async function getVideos(token) {
-					var options = {
-						part: 'snippet',
-						key: 'AIzaSyCb62u0hNUTyUtcdOi-VbZtSNtisI7uCB0',
-						maxResults: 50,
-						playlistId: playlist,
-						url: 'https://www.googleapis.com/youtube/v3/playlistItems'
-					};
-
-					if (token != null) { options.pageToken = token; }
-
-					await $.getJSON(options.url, options, function (data) { tokenChecker(data); });
-				}
-				
-				function tokenChecker(data) {
-					resp.push(data);
-					if ('nextPageToken' in data) { getVideos(data.nextPageToken); }
-				}
-			}
-
-			return resp;
-		}
-
-		return console.log(await getVids());
-
-		var videos = [];
-		for (const list of resp) {
-			var vids = formatVideos(removeUnavailable(list));
-			vids.forEach(vid => videos.push(vid))
-		}
-		
-		//main(videos, removePrivates(videos))
-	})()
-	*/
 
 	(async function() {
 		var videos = [];
@@ -221,6 +143,23 @@ $(document).ready(function() {
 				})
 			}
 
+			const uploaders = getUploaders(videos);
+			if (urlUploader) {
+				$('#select-uploader').append(`<option value="">Uploaded by Everyone</option>`);
+				uploaders.forEach(uploader => {
+					if (uploader == urlUploader) {
+						$('#select-uploader').append(`<option value="${uploader}" selected="selected">Uploaded by ${uploader}</option>`);
+					} else {
+						$('#select-uploader').append(`<option value="${uploader}">Uploaded by ${uploader}</option>`);
+					}
+				})
+			} else {
+				$('#select-uploader').append(`<option value="" selected="selected">Uploaded by Everyone</option>`);
+				uploaders.forEach(uploader => {
+					$('#select-uploader').append(`<option value="${uploader}">Uploaded by ${uploader}</option>`);
+				})
+			}
+
 			if (urlSorting && (urlSorting == 1 || urlSorting == 2 || urlSorting == 3)) {
 				$('#select-sort').append(`<option value="">Uploaded date (descending)</option>`);
 				
@@ -252,6 +191,7 @@ $(document).ready(function() {
 
 			videosNoPrivate.forEach(video => {
 				if (urlGame && video.game != urlGame) return;
+				if (urlUploader && video.uploadedBy != urlUploader) return;
 
 				var vid_desc = "";
 				var vid_game = ``;
@@ -419,6 +359,16 @@ $(document).ready(function() {
 		videosFormatted.forEach(e => {
 			if (!result.includes(e.game)) {
 				result.push(e.game);
+			}
+		});
+		return result;
+	}
+
+	function getUploaders(videosFormatted) {
+		var result = [];
+		videosFormatted.forEach(e => {
+			if (!result.includes(e.uploadedBy)) {
+				result.push(e.uploadedBy);
 			}
 		});
 		return result;
@@ -611,14 +561,16 @@ $(document).ready(function() {
 		return returnable;
 	}
 
-	$( "#select-sort, #select-game" ).change(function() {
+	$( "#select-sort, #select-game, #select-uploader" ).change(function() {
 		var sort = $('#select-sort').find(":selected").val();
 		var game = $('#select-game').find(":selected").val();
+		var uploader = $('#select-uploader').find(":selected").val();
 
 		if (game) game = `?g=${game}`
 		if (sort) sort = `?s=${sort}`
+		if (uploader) uploader = `?u=${uploader}`
 
 		var url = window.location.href.split('?')[0];
-		window.location.href = `${url}${game}${sort}`
+		window.location.href = `${url}${game}${sort}${uploader}`
 	});
 });
