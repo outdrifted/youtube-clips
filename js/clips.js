@@ -189,14 +189,14 @@ $(document).ready(function() {
 				videos.push(formatVideos(removeUnavailable(d)));
 			}
 
-			videosNoPrivate = removePrivates(videos);
+			videosNoPrivate = videos;
 		}
 		//#endregion
 
 		var videos = [].concat.apply([], videos);
 		var videosNoPrivate = [].concat.apply([], videosNoPrivate);
 
-		main(videos.sort(sortByProperty(`${sortingReverse}${sortingProperty}`)), videosNoPrivate.sort(sortByProperty(`${sortingReverse}${sortingProperty}`)));
+		main(videos.sort(sortByProperty(`${sortingReverse}${sortingProperty}`)), removePrivates(videosNoPrivate).sort(sortByProperty(`${sortingReverse}${sortingProperty}`)));
 	})()
 
 	function main(videos, videosNoPrivate) {
