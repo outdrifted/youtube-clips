@@ -1,6 +1,6 @@
 const nameLib = {
 	"yummy": {
-		"aliases": ["Outdrifted", "yummy", "williuz", "viluhas"],
+		"aliases": ["Outdrifted", "yummy", "williuz", "viluhas", "vilius diglys"],
 		"link": "https://steamcommunity.com/profiles/76561198130515965",
 		"icon": "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/avatars/8b/8b8c5e318189a8d8c8dba1cabe39f27cb9391da6_full.jpg"
 	},
@@ -45,7 +45,7 @@ const nameLib = {
 		"icon": "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/avatars/37/37c7384f6c967939e5fcdd8a14619a752a0c3b75_full.jpg"
 	},
 	"Passat Rider": {
-		"aliases": ["perceptionist"],
+		"aliases": ["Perceptionist"],
 		"link": "https://steamcommunity.com/profiles/76561198130847328",
 		"icon": "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/avatars/63/636f518ade48d116c8a99896592df55c83a64c84_full.jpg"
 	},
@@ -63,10 +63,5 @@ const nameLib = {
 		"aliases": ["avokenn"],
 		"link": "https://steamcommunity.com/profiles/76561198263736652",
 		"icon": "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/avatars/69/692fd3799552482f06b998a685cf7c12de3e0b5c_full.jpg"
-	},
-	"SiGi": {
-		"aliases": ["sigi"],
-		"link": "https://steamcommunity.com/profiles/76561198366460943",
-		"icon": "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/avatars/0a/0ac974c69a8387c691289e1cf1810e091e403403_full.jpg"
 	}
 }

@@ -48,6 +48,7 @@ $(document).ready(function() {
 	*/
 	//#endregion
 
+	/*
 	getVideos(null);
 	function getVideos(token) {
 		var options = {
@@ -87,18 +88,54 @@ $(document).ready(function() {
 			main(data[0]);
 		}
 	}
+	*/
 
-	function getGames(videosFormatted) {
-		var result = [];
-		videosFormatted.forEach(e => {
-			if (!result.includes(e.game)) {
-				result.push(e.game);
+	/*
+	(async function() {
+		async function getVids() {
+			var resp = [];
+
+			for (const playlist of playlists) {
+				await getVideos(null);
+				async function getVideos(token) {
+					var options = {
+						part: 'snippet',
+						key: 'AIzaSyCb62u0hNUTyUtcdOi-VbZtSNtisI7uCB0',
+						maxResults: 50,
+						playlistId: playlist,
+						url: 'https://www.googleapis.com/youtube/v3/playlistItems'
+					};
+
+					if (token != null) { options.pageToken = token; }
+
+					await $.getJSON(options.url, options, function (data) { tokenChecker(data); });
+				}
+				
+				function tokenChecker(data) {
+					resp.push(data);
+					if ('nextPageToken' in data) { getVideos(data.nextPageToken); }
+				}
 			}
-		});
-		return result;
-	}
 
-	function main(data) {
+			return resp;
+		}
+
+		return console.log(await getVids());
+
+		var videos = [];
+		for (const list of resp) {
+			var vids = formatVideos(removeUnavailable(list));
+			vids.forEach(vid => videos.push(vid))
+		}
+		
+		//main(videos, removePrivates(videos))
+	})()
+	*/
+
+	(async function() {
+		var videos = [];
+		var videosNoPrivate = [];
+
 		var sortingProperty = "";
 		var sortingReverse = "";
 		switch (urlSorting) {
@@ -122,9 +159,47 @@ $(document).ready(function() {
 				sortingReverse = "";
 				break;
 		}
-		const videos = formatVideos(removeUnavailable(data)).sort(sortByProperty(`${sortingReverse}${sortingProperty}`));
-		const videosNoPrivate = removePrivates(videos);
 
+		//#region Get videos via YT API
+		for (const playlistID of playlists) {
+			var data = await (async function() {
+				var ret = [];
+				var ret_temp = [];
+
+				var options = {
+					part: 'snippet',
+					key: 'AIzaSyCb62u0hNUTyUtcdOi-VbZtSNtisI7uCB0',
+					maxResults: 50,
+					playlistId: playlistID,
+					url: 'https://www.googleapis.com/youtube/v3/playlistItems'
+				};
+
+				await getVids(null)
+				async function getVids(token) {
+					if (token != null) { options.pageToken = token; }
+					await $.getJSON(options.url, options, function (data) { return ret_temp.push(data); }).then(async (data) => {
+						if ('nextPageToken' in data) {await getVids(data.nextPageToken)} else {ret = ret_temp };
+					});
+				}
+
+				return ret;
+			})()
+
+			for (const d of data) {
+				videos.push(formatVideos(removeUnavailable(d)));
+			}
+
+			videosNoPrivate = removePrivates(videos);
+		}
+		//#endregion
+
+		var videos = [].concat.apply([], videos);
+		var videosNoPrivate = [].concat.apply([], videosNoPrivate);
+
+		main(videos.sort(sortByProperty(`${sortingReverse}${sortingProperty}`)), videosNoPrivate.sort(sortByProperty(`${sortingReverse}${sortingProperty}`)));
+	})()
+
+	function main(videos, videosNoPrivate) {
 		$(`.loading`).remove();
 		
 		if (!urlVideo) {
@@ -179,38 +254,50 @@ $(document).ready(function() {
 				if (urlGame && video.game != urlGame) return;
 
 				var vid_desc = "";
-				var vid_game = `<div class="video-game">‎</div>`;
-				var vid_people = "";
+				var vid_game = ``;
 				var vid_new = ``;
 				var vid_highlight = ``;
+				var vid_uploadedBy = ``;
 	
 				if (video.description) vid_desc = `<div class="video-description">"${video.description}"</div>`
-				if (video.game) vid_game = `<div class="video-game">${video.game}</div>`
 				if (video.dateAddedAgo < 432000000) var vid_new = `<div class="new-clip">NEW!</div>`;
 				if (video.highlight) vid_highlight = `<div class="clip_highlighted_popout">🔥</div>`;
-				//if (video.people && video.people.length) vid_people = `<div class="video-people">${video.people.join(', ')}</div>`
+
+				if (nameLib[video.uploadedBy]) {
+					vid_uploadedBy += `<div class="video_uploadedBy"><img draggable="false" src="${nameLib[video.uploadedBy].icon}"></img>${video.uploadedBy}</div>`;
+				} else vid_uploadedBy += `<div class="video_uploadedBy">${video.uploadedBy}</div>`;
+
+				//if (video.game) vid_game = `<div class="video_people_detailed video-game"><img draggable="false" src="${gameLib[video.game].icon}"></img>${video.game}</div>`
 	
+				if (video.game && (video.game != "Other")) {
+					vid_game += `<div class="video_game">${gameLib[video.game] && gameLib[video.game].icon ? `<img draggable="false" src="${gameLib[video.game].icon}"></img>` : ""}${video.game}</div>`;
+				} else vid_game += `<div class="video-game">‎</div>`;
+
+				/*
+				<div class="video-date">${formatDate(video.dateRecorded || video.dateAdded)}</div>
+				*/
+
 				$('.video-list').append(`
-				<div class="video ${video.highlight ? "clip_highlighted" : ""}" id="clip-${video.id}">
-					<div>
-					<div class="popouts">
-					${vid_new}
-					${vid_highlight}
-					</div>
-					<img class="video-thumbnail" draggable="false" src="${video.thumbnail.medium.url}"></img>
-					</div>
-					<div class="description">
+					<div class="video ${video.highlight ? "clip_highlighted" : ""}" id="clip-${video.id}">
 						<div>
-							<div class="video-title">${video.title}</div>
-							${vid_people}
-							${vid_desc}
+						<div class="popouts">
+						${vid_new}
+						${vid_highlight}
 						</div>
-						<div class="video-footer">
-							<div class="video-date">${formatDate(video.dateRecorded || video.dateAdded)}</div>
-							${vid_game}
+						<img class="video-thumbnail" draggable="false" src="${video.thumbnail.medium.url}"></img>
 						</div>
+						<div class="description">
+							<div>
+								<div class="video-title">${video.title}</div>
+								${vid_desc}
+							</div>
+							<div class="video-footer">
+								${vid_uploadedBy}
+								${vid_game}
+							</div>
+						</div>
+						<a href="${window.location.href + `?v=${video.id}`}" style="display: block;"><span class="link-spanner"></span></a>
 					</div>
-				</div>
 				`);
 			})
 
@@ -225,7 +312,7 @@ $(document).ready(function() {
 
 			if (!video) {
 				$('.main').append(`
-				<div class="back">< Back</div>
+				<div class="back">< Back<a href="${window.location.href.replace(`?v=${urlVideo}`, '')}" style="display: block;"><span class="link-spanner"></span></a></div>
 				<div class="error" style="border-top-left-radius: 0px; border-top-right-radius: 0px;margin:0px">Clip not found.</div>
 				`);
 			}
@@ -260,11 +347,6 @@ $(document).ready(function() {
 			if (video.people) {
 				var html = `<div class="video_people_detailed_list">`;
 				video.people.forEach(person => {
-					/*
-					for (const [key, val] of Object.entries(nameLib)) {
-						if (val.aliases.includes(r.recordedBy.toLowerCase())) r.recordedBy = key;
-					}
-					*/
 					if (nameLib[person]) {
 						html += `<div class="video_people_detailed"><a href="${nameLib[person].link}"><img draggable="false" src="${nameLib[person].icon}"></img>${person}</a></div>`;
 					} else html += `<div class="video_people_detailed">${person}</div>`;
@@ -277,9 +359,14 @@ $(document).ready(function() {
 				video_recordedby = `<div class="video_people_detailed"><a href="${nameLib[video_recordedby].link}"><img draggable="false" src="${nameLib[video_recordedby].icon}"></img>${video_recordedby}</a></div>`;
 			}
 
+			var video_uploadedby = video.uploadedBy;
+			if (nameLib[video_uploadedby]) {
+				video_uploadedby = `<div class="video_people_detailed"><a href="${nameLib[video_uploadedby].link}"><img draggable="false" src="${nameLib[video_uploadedby].icon}"></img>${video_uploadedby}</a></div>`;
+			}
+
 			$('.main').append(`
 			<div class="vid-direct">
-				<div class="back">< Back</div>
+				<div class="back">< Back<a href="${window.location.href.replace(`?v=${urlVideo}`, '')}" style="display: block;"><span class="link-spanner"></span></a></div>
 				<div class="video-player-wrapper">
 					<div class="video-player-loading">Loading...</div>
 					<iframe class="video-player" src="https://www.youtube.com/embed/${urlVideo}?rel=0&amp;playlist=${urlVideo}&amp;loop=1&amp;autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>
@@ -291,31 +378,50 @@ $(document).ready(function() {
 				<div id="vid-desc">${video.description ? `"${video.description}"` : ""}</div>
 				</div>
 					<table>
+						${video.game != "Other" ? `
 						<tr>
-						<td>Game</td>
+							<td>Game</td>
 							<td>${game_linkstart}${gameicon}${video.game || "No game specified."}${game_linkend}</td>
 						</tr>
+						` : ``}
+						${video.people.length ? `
 						<tr>
 							<td>People in clip</td>
 							<td>${video_people}</td>
-						</tr>
+						</tr>` : ""}
+						${video.recordedBy ? `
 						<tr>
 							<td>Recorded by</td>
 							<td>${video_recordedby}</td>
+						</tr>
+						` : ``}
+						<tr>
+							<td>Uploaded by</td>
+							<td>${video_uploadedby}</td>
 						</tr>
 						<tr>
 							<td>Date uploaded</td>
 							<td>${formatDateWithTime(video.dateAdded)}</td>
 						</tr>
-						<tr>
-							<td>Date recorded</td>
-							<td>${video.dateRecorded ? formatDate(video.dateRecorded) : "No date specified."}</td>
-						</tr>
+						${video.dateRecorded != Infinity ? `<tr>
+						<td>Date recorded</td>
+						<td>${formatDate(video.dateRecorded)}</td>
+					</tr>` : ""}
 					</table>
 				</div>
 			</div>
 			`)
 		}
+	}
+
+	function getGames(videosFormatted) {
+		var result = [];
+		videosFormatted.forEach(e => {
+			if (!result.includes(e.game)) {
+				result.push(e.game);
+			}
+		});
+		return result;
 	}
 
 	function formatVideos(videos) {
@@ -330,7 +436,12 @@ $(document).ready(function() {
 				title: video.snippet.title,
 				thumbnail: video.snippet.thumbnails,
 				dateAdded: video.snippet.publishedAt,
-				dateAddedAgo: Math.abs(new Date() - new Date(video.snippet.publishedAt))
+				dateAddedAgo: Math.abs(new Date() - new Date(video.snippet.publishedAt)),
+				uploadedBy: video.snippet.videoOwnerChannelTitle
+			}
+
+			for (const [key, val] of Object.entries(nameLib)) {
+				if (val.aliases.includes(r.uploadedBy.toLowerCase())) r.uploadedBy = key;
 			}
 
 			var description = video.snippet.description;
@@ -346,25 +457,6 @@ $(document).ready(function() {
 				).split(',');
 
 				r.people = r.people.map(s => s.trim());
-
-				/*
-				var peopleArray = [];
-				r.people.forEach(person => {
-					var name = person;
-					for (const key in nameLib) {
-						if (Object.hasOwnProperty.call(nameLib, key)) {
-							const e = nameLib[key];
-
-							if (e.includes(person.toLowerCase())) {
-								return peopleArray.push(key);
-							}
-						}
-					}
-					peopleArray.push(name);
-				})
-				r.people = peopleArray;
-				r.people.sort();
-				*/
 
 				var peopleArray = [];
 				r.people.forEach(person => {
@@ -386,19 +478,6 @@ $(document).ready(function() {
 					description.lastIndexOf(searchFor) + len, 
 					description.indexOf(")", description.lastIndexOf(searchFor) + len)
 				);
-				
-				/*
-				for (const key in gameLib.aliases) {
-					console.log(key)
-					if (Object.hasOwnProperty.call(gameLib.aliases, key)) {
-						const e = gameLib.aliases[key];
-
-						if (e.includes(r.game.toLowerCase())) {
-							r.game = key;
-						}
-					}
-				}
-				*/
 
 				for (const [game, props] of Object.entries(gameLib)) {
 					if (props.aliases.includes(r.game.toLowerCase())) r.game = game;
@@ -424,36 +503,11 @@ $(document).ready(function() {
 					description.indexOf(")", description.lastIndexOf(searchFor) + len)
 				);
 
-				/*
-				for (const key in nameLib) {
-					if (Object.hasOwnProperty.call(nameLib, key)) {
-						const e = nameLib[key];
-
-						if (e.includes(r.recordedBy.toLowerCase())) {
-							r.recordedBy = key;
-						}
-					}
-				}
-				*/
 				for (const [key, val] of Object.entries(nameLib)) {
 					if (val.aliases.includes(r.recordedBy.toLowerCase())) r.recordedBy = key;
 				}
 			} else {
-				r.recordedBy = 'yummy';
-				/*
-				for (const key in nameLib) {
-					if (Object.hasOwnProperty.call(nameLib, key)) {
-						const e = nameLib[key];
-
-						if (e.includes(r.recordedBy.toLowerCase())) {
-							r.recordedBy = key;
-						}
-					}
-				}
-				*/
-				for (const [key, val] of Object.entries(nameLib)) {
-					if (val.aliases.includes(r.recordedBy.toLowerCase())) r.recordedBy = key;
-				}
+				r.recordedBy = undefined;
 			}
 
 			if (description.includes("date(")) {
@@ -540,7 +594,7 @@ $(document).ready(function() {
 	function removeUnavailable(input) {
 		var returning = [];
 		input.items.forEach(function(item) {
-			if (!item.snippet.description.includes("This video is")) {
+			if (!item.snippet.description.startsWith("This video is")) {
 				returning.push(item);
 			}
 		});
@@ -557,10 +611,6 @@ $(document).ready(function() {
 		return returnable;
 	}
 
-	function scrollToTop() {
-        window.scrollTo({top: 0, behavior: 'smooth'});
-    }
-
 	$( "#select-sort, #select-game" ).change(function() {
 		var sort = $('#select-sort').find(":selected").val();
 		var game = $('#select-game').find(":selected").val();
@@ -570,21 +620,5 @@ $(document).ready(function() {
 
 		var url = window.location.href.split('?')[0];
 		window.location.href = `${url}${game}${sort}`
-	});
-
-	$('body').on('click', '.video', function() {
-		var id = $(this).attr('id').replace('clip-','');
-		window.location.href = `${window.location.href}?v=${id}`
-	});
-
-	$('body').on('click', '.back', function() {
-		var urlVideo = (function() {
-			if (urlData == null) return null;
-			var data = urlData.split('?v=').pop().split('?')[0];
-			if (data == "") return null;
-			return decodeURI(data);
-		})();
-		
-		window.location.href = window.location.href.replace(`?v=${urlVideo}`, '')
 	});
 });
