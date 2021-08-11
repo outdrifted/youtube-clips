@@ -6,11 +6,12 @@ The website gathers parameters from the YouTube description, so you can specify 
 
  - `description(your description)` - Displayed below clip Title in quotes ("")
  - `people(person1, person2, person3, ...)`
- - `game(game name)`
- - `private()`
+ - `game(game name)` - Displayed at bottom right corner of clip.
+ - `private()` - Makes clip not show up in the clip browser, but can still be accessed via direct link.
  - `recordedBy(person)`
  - `date(2001-01-01)` - Shows up as "Date recorded"
-An example of what your description could look like:
+
+#### An example of what your description could look like:
 ```
-description(This is my clip!) people(Me, My Friend, That Unknown Guy)
+description(This is my clip!) people(Me, test, friendly guy) game(Minecraft)
 ```
