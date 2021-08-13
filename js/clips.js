@@ -120,6 +120,12 @@ $(document).ready(function() {
 
 	function main(videos, videosNoPrivate) {
 		$(`.loading`).remove();
+
+		/*
+		$(`.main`).append(`
+		<div class="footer">Outdrifted © ${new Date().getFullYear()} · <a href="./about" id="about-link">About</a></div>
+		`);
+		*/
 		
 		if (!urlVideo) {
 			// No video specified
@@ -467,7 +473,7 @@ $(document).ready(function() {
 				));
 
 				r.dateRecordedAgo = Math.abs(new Date() - new Date(r.dateRecorded.getTime()));
-			} else { r.dateRecorded = Infinity; r.dateRecordedAgo = Infinity; }
+			} else { /*r.dateRecorded = Infinity; r.dateRecordedAgo = Infinity;*/r.dateRecorded = r.dateAdded; r.dateRecordedAgo = r.dateAddedAgo }
 
 			/* Makes the video not show up in clip browser */
 			if (description.includes("private()")) {
