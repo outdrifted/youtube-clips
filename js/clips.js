@@ -62,22 +62,19 @@ $(document).ready(function() {
 		var sortingReverse = "";
 		switch (urlSorting) {
 			case '1':
-				sortingProperty = "dateAddedAgo";
+				sortingProperty = "dateRecordedAgo";
 				sortingReverse = "-";
 				break;
-
 			case '2':
-				sortingProperty = "dateRecordedAgo";
+				sortingProperty = "dateAddedAgo";
 				sortingReverse = "";
 				break;
-
 			case '3':
-				sortingProperty = "dateRecordedAgo";
+				sortingProperty = "dateAddedAgo";
 				sortingReverse = "-";
 				break;
-		
 			default:
-				sortingProperty = "dateAddedAgo";
+				sortingProperty = "dateRecordedAgo";
 				sortingReverse = "";
 				break;
 		}
@@ -161,30 +158,30 @@ $(document).ready(function() {
 			}
 
 			if (urlSorting && (urlSorting == 1 || urlSorting == 2 || urlSorting == 3)) {
-				$('#select-sort').append(`<option value="">Uploaded date (descending)</option>`);
+				$('#select-sort').append(`<option value="">Sort: Recorded date ⬇️</option>`);
 				
 				if (urlSorting == 1) {
-					$('#select-sort').append(`<option value="1" selected="selected">Uploaded date (ascending)</option>`);
+					$('#select-sort').append(`<option value="1" selected="selected">Sort: Recorded date ⬆️</option>`);
 				} else {
-					$('#select-sort').append(`<option value="1">Uploaded date (ascending)</option>`);
+					$('#select-sort').append(`<option value="1">Sort: Uploaded date ⬆️</option>`);
 				}
 
 				if (urlSorting == 2) {
-					$('#select-sort').append(`<option value="2" selected="selected">Recorded date (descending)</option>`);
+					$('#select-sort').append(`<option value="2" selected="selected">Sort: Uploaded date ⬇️</option>`);
 				} else {
-					$('#select-sort').append(`<option value="2">Recorded date (descending)</option>`);
+					$('#select-sort').append(`<option value="2">Sort: Uploaded date ⬇️</option>`);
 				}
 
 				if (urlSorting == 3) {
-					$('#select-sort').append(`<option value="3" selected="selected">Recorded date (ascending)</option>`);
+					$('#select-sort').append(`<option value="3" selected="selected">Sort: Uploaded date ⬆️</option>`);
 				} else {
-					$('#select-sort').append(`<option value="3">Recorded date (ascending)</option>`);
+					$('#select-sort').append(`<option value="3">Sort: Uploaded date ⬆️</option>`);
 				}
 			} else {
-				$('#select-sort').append(`<option value="" selected="selected">Uploaded date (descending)</option>`);
-				$('#select-sort').append(`<option value="1">Uploaded date (ascending)</option>`);
-				$('#select-sort').append(`<option value="2">Recorded date (descending)</option>`);
-				$('#select-sort').append(`<option value="3">Recorded date (ascending)</option>`);
+				$('#select-sort').append(`<option value="" selected="selected">Sort: Recorded date ⬇️</option>`);
+				$('#select-sort').append(`<option value="1">Sort: Recorded date ⬆️</option>`);
+				$('#select-sort').append(`<option value="2">Sort: Uploaded date ⬇️</option>`);
+				$('#select-sort').append(`<option value="3">Sort: Uploaded date ⬆️</option>`);
 			}
 
 			$('.options').css('display', 'flex');
