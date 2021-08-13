@@ -13,5 +13,5 @@ The website gathers parameters from the YouTube description, so you can specify 
 
 #### An example of what your description could look like:
 ```
-description(This is my clip!) people(Me, test, friendly guy) game(Minecraft)
+description(This is my clip!) people(Me, My friend, friendly guy) game(csgo)
 ```
