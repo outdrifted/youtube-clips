@@ -1,4 +1,7 @@
 const gameLib = {
+	"Other": {
+		"aliases": ["archive"]
+	},
 	"Rocket League": {
 		"aliases": ["rl", "rocket league"],
 		"link": "https://www.epicgames.com/store/en-US/p/rocket-league",
