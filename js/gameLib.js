@@ -51,5 +51,10 @@ const gameLib = {
 		"aliases": ["uno"],
 		"link": "https://store.steampowered.com/app/470220/UNO/",
 		"icon": "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/470220/8714f533f03a77d88905b44e56b905e637478e75.jpg"
+	},
+	"Valorant": {
+		"aliases": ["valorant"],
+		"link": "https://playvalorant.com/",
+		"icon": "https://yt3.ggpht.com/ytc/AKedOLQ7OQUPtFpLoquv9QGOTNovu0Jv4XoMd6PrszQg=s48-c-k-c0x00ffffff-no-rj"
 	}
 }
