@@ -205,10 +205,13 @@ $(document).ready(function() {
 				if (video.description) vid_desc = `<div class="video-description">"${video.description}"</div>`
 				if (video.dateAddedAgo < 432000000) var vid_new = `<div class="new-clip">NEW!</div>`;
 				if (video.highlight) vid_highlight = `<div class="clip_highlighted_popout">🔥</div>`;
+				
+				var searchby = video.uploadedBy;
+				if (video.recordedBy) searchby = video.recordedBy;
 
-				if (nameLib[video.uploadedBy]) {
-					vid_uploadedBy += `<div class="video_uploadedBy"><img draggable="false" src="${nameLib[video.uploadedBy].icon}"></img>${video.uploadedBy}</div>`;
-				} else vid_uploadedBy += `<div class="video_uploadedBy">${video.uploadedBy}</div>`;
+				if (nameLib[searchby]) {
+					vid_uploadedBy += `<div class="video_uploadedBy"><img draggable="false" src="${nameLib[searchby].icon}"></img>${searchby}</div>`;
+				} else vid_uploadedBy += `<div class="video_uploadedBy">${searchby}</div>`;
 
 				//if (video.game) vid_game = `<div class="video_people_detailed video-game"><img draggable="false" src="${gameLib[video.game].icon}"></img>${video.game}</div>`
 	
