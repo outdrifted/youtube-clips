@@ -148,18 +148,18 @@ $(document).ready(function() {
 
 			const uploaders = getUploaders(videos);
 			if (urlUploader) {
-				$('#select-uploader').append(`<option value="">Uploaded by Everyone</option>`);
+				$('#select-uploader').append(`<option value="">By Everyone</option>`);
 				uploaders.forEach(uploader => {
 					if (uploader == urlUploader) {
-						$('#select-uploader').append(`<option value="${uploader}" selected="selected">Uploaded by ${uploader}</option>`);
+						$('#select-uploader').append(`<option value="${uploader}" selected="selected">By ${uploader}</option>`);
 					} else {
-						$('#select-uploader').append(`<option value="${uploader}">Uploaded by ${uploader}</option>`);
+						$('#select-uploader').append(`<option value="${uploader}">By ${uploader}</option>`);
 					}
 				})
 			} else {
-				$('#select-uploader').append(`<option value="" selected="selected">Uploaded by Everyone</option>`);
+				$('#select-uploader').append(`<option value="" selected="selected">By Everyone</option>`);
 				uploaders.forEach(uploader => {
-					$('#select-uploader').append(`<option value="${uploader}">Uploaded by ${uploader}</option>`);
+					$('#select-uploader').append(`<option value="${uploader}">By ${uploader}</option>`);
 				})
 			}
 
@@ -194,7 +194,7 @@ $(document).ready(function() {
 
 			videosNoPrivate.forEach(video => {
 				if (urlGame && video.game != urlGame) return;
-				if (urlUploader && video.uploadedBy != urlUploader) return;
+				if (urlUploader && /*video.uploadedBy*/ video.recordedBy != urlUploader) return;
 
 				var vid_desc = "";
 				var vid_game = ``;
@@ -300,9 +300,16 @@ $(document).ready(function() {
 				video_people = html + `</div>`;
 			}
 
-			var video_recordedby = video.recordedBy;
-			if (nameLib[video_recordedby]) {
-				video_recordedby = `<div class="video_people_detailed"><a href="${nameLib[video_recordedby].link}"><img draggable="false" src="${nameLib[video_recordedby].icon}"></img>${video_recordedby}</a></div>`;
+			var video_recordedby = "";
+			if (video.recordedBy != video.uploadedBy) {
+				video_recordedby = video.recordedBy;
+				if (nameLib[video_recordedby]) {
+					video_recordedby = `<div class="video_people_detailed"><a href="${nameLib[video_recordedby].link}"><img draggable="false" src="${nameLib[video_recordedby].icon}"></img>${video_recordedby}</a></div>`;
+				}
+				video_recordedby = `<tr>
+				<td>Recorded by</td>
+				<td>${video_recordedby}</td>
+				</tr>`
 			}
 
 			var video_uploadedby = video.uploadedBy;
@@ -336,10 +343,7 @@ $(document).ready(function() {
 							<td>${video_people}</td>
 						</tr>` : ""}
 						${video.recordedBy ? `
-						<tr>
-							<td>Recorded by</td>
-							<td>${video_recordedby}</td>
-						</tr>
+						${video_recordedby}
 						` : ``}
 						<tr>
 							<td>Uploaded by</td>
@@ -373,8 +377,8 @@ $(document).ready(function() {
 	function getUploaders(videosFormatted) {
 		var result = [];
 		videosFormatted.forEach(e => {
-			if (!result.includes(e.uploadedBy)) {
-				result.push(e.uploadedBy);
+			if (!result.includes(e.recordedBy)) {
+				result.push(e.recordedBy);
 			}
 		});
 		return result;
@@ -463,7 +467,7 @@ $(document).ready(function() {
 					if (val.aliases.includes(r.recordedBy.toLowerCase())) r.recordedBy = key;
 				}
 			} else {
-				r.recordedBy = undefined;
+				r.recordedBy = r.uploadedBy;
 			}
 
 			if (description.includes("date(")) {
