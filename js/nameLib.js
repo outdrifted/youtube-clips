@@ -68,5 +68,10 @@ const nameLib = {
 		"aliases": ["hopper", "hopperx", "h0pper", "h0pperx"],
 		"link": "https://steamcommunity.com/profiles/76561198393953816",
 		"icon": "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/avatars/86/86ea50eeaab324168ecb46053ccaeeb587828a6d_full.jpg"
+	},
+	"SiGi": {
+		"aliases": ["sigi"],
+		"link": "https://steamcommunity.com/profiles/76561198366460943",
+		"icon": "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/avatars/0a/0ac974c69a8387c691289e1cf1810e091e403403_full.jpg"
 	}
 }
