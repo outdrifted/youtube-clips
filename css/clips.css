@@ -380,14 +380,43 @@ body {
 	border-bottom-right-radius: 5px;
 }
 
-@media screen and (min-width: 1000px) {
+.footer, .footer a, .footer span {
+	margin-top: 25px;
+	text-align: center;
+	white-space: initial;
+	color: #535353;
+	font-weight: 500;
+}
+
+.footer span {
+	font-weight: 800;
+	user-select: none;
+	border-color: rgba(83, 83, 83, 0);
+	border-style: solid;
+	border-width: 2px;
+	border-top-width: 0px;
+	border-bottom-width: 0px;
+	transition: padding 1s, border-color 1s;
+}
+
+.footer span:hover {
+	border-color: rgba(83, 83, 83, 1);
+	padding-right: 3px;
+	padding-left: 3px;
+}
+
+.about-link {
+	color: initial;
+}
+
+@media screen and (min-width: 1040px) {
 	.main {
 		margin-top: 25px;
 		margin-bottom: 25px;
 	}
 }
 
-@media screen and (max-width: 1000px) {
+@media screen and (max-width: 1040px) {
 	.custom-select {
 		width: 100% !important;
 		margin-bottom: 10px;
@@ -402,4 +431,8 @@ body {
 	}
 
 	.logo {display: none;}
+
+	.footer, .footer a, .footer span {
+		margin-top: 10px;
+	}
 }

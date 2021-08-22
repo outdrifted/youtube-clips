@@ -1,3 +1,5 @@
+const startTimer = performance.now();
+
 $(document).ready(function() {
 	//#region Getting URL Data
 	const urlData = (function() {
@@ -120,12 +122,6 @@ $(document).ready(function() {
 
 	function main(videos, videosNoPrivate) {
 		$(`.loading`).remove();
-
-		/*
-		$(`.main`).append(`
-		<div class="footer">Outdrifted © ${new Date().getFullYear()} · <a href="./about" id="about-link">About</a></div>
-		`);
-		*/
 		
 		if (!urlVideo) {
 			// No video specified
@@ -362,6 +358,17 @@ $(document).ready(function() {
 			</div>
 			`)
 		}
+
+		var lastUpload = videos.sort(sortByProperty(`-dateAdded`))[0];
+
+		$(`.main`).append(`
+			<div class="footer">
+				<span>Outdrifted © ${new Date().getFullYear()}<br/></span>
+				Clips: ${videos.length} (${videosNoPrivate.length} public, ${videos.length - videosNoPrivate.length} private)<br/>
+				Last upload: ${lastUpload.dateAdded.replace("T", " ").replace("Z", "")} by ${lastUpload.uploadedBy}<br/>
+				Load time: ${Math.floor(performance.now()-startTimer)} ms
+			</div>
+		`);
 	}
 
 	function getGames(videosFormatted) {
