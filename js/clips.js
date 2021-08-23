@@ -365,7 +365,7 @@ $(document).ready(function() {
 			<div class="footer">
 				<span id="footer-top">Outdrifted © ${new Date().getFullYear()}<br/></span>
 				Clips: ${videos.length} (${videosNoPrivate.length} public, ${videos.length - videosNoPrivate.length} private)<br/>
-				Last upload: ${lastUpload.dateAdded.replace("T", " ").replace("Z", "")} by ${lastUpload.uploadedBy}<br/>
+				Last upload: ${formatDateWithTime(lastUpload.dateAdded)} by ${lastUpload.uploadedBy}<br/>
 				Clip sources: ${playlists.length}<br/>
 				Load time: ${Math.floor(performance.now()-startTimer)} ms<br/>
 				<span id="footer-more">Show more</span>
@@ -522,27 +522,27 @@ $(document).ready(function() {
 	}
 
 	function formatDateWithTime(date_) {
-		let date_ob = new Date(date_);
+		let date = new Date(date_);
 
 		// adjust 0 before single digit date
-		let date = ("0" + date_ob.getDate()).slice(-2);
+		let day = ("0" + date.getDate()).slice(-2);
 
 		// current month
-		let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+		let month = ("0" + (date.getMonth() + 1)).slice(-2);
 
 		// current year
-		let year = date_ob.getFullYear();
+		let year = date.getFullYear();
 
 		// current hours
-		let hours = date_ob.getHours();
-		if (hours < 10) hour = "0" + date_ob.getHours();
+		let hours = date.getHours();
+		if (hours < 10) hours = "0" + date.getHours();
 
 		// current minutes
-		let minutes = date_ob.getMinutes();
-		if (minutes < 10) minutes = "0" + date_ob.getMinutes();
+		let minutes = date.getMinutes();
+		if (minutes < 10) minutes = "0" + date.getMinutes();
 
 		// prints date & time in YYYY-MM-DD HH:MM:SS format
-		return year + "-" + month + "-" + date + " " + hours + ":" + minutes;
+		return `${year}-${month}-${day} ${hours}:${minutes}`;
 	}
 
 	function sortByProperty(property) {
