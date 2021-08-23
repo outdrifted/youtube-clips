@@ -363,10 +363,12 @@ $(document).ready(function() {
 
 		$(`.main`).append(`
 			<div class="footer">
-				<span>Outdrifted © ${new Date().getFullYear()}<br/></span>
+				<span id="footer-top">Outdrifted © ${new Date().getFullYear()}<br/></span>
 				Clips: ${videos.length} (${videosNoPrivate.length} public, ${videos.length - videosNoPrivate.length} private)<br/>
 				Last upload: ${lastUpload.dateAdded.replace("T", " ").replace("Z", "")} by ${lastUpload.uploadedBy}<br/>
-				Load time: ${Math.floor(performance.now()-startTimer)} ms
+				Clip sources: ${playlists.length}<br/>
+				Load time: ${Math.floor(performance.now()-startTimer)} ms<br/>
+				<span id="footer-more">Show more</span>
 			</div>
 		`);
 	}
@@ -589,5 +591,11 @@ $(document).ready(function() {
 
 		var url = window.location.href.split('?')[0];
 		window.location.href = `${url}${game}${sort}${uploader}`
+	});
+
+	$('body').on('click','#footer-more',function(){
+		$('#footer-more').remove();
+		$(`.main`).append(`nameLib.js<pre class="footer-code">${JSON.stringify(nameLib, null, `\t`)}</pre>`)
+		$(`.main`).append(`gameLib.js<pre class="footer-code">${JSON.stringify(gameLib, null, `\t`)}</pre>`)
 	});
 });

@@ -380,7 +380,7 @@ body {
 	border-bottom-right-radius: 5px;
 }
 
-.footer, .footer a, .footer span {
+.footer, .footer a, .footer #footer-top, .footer span {
 	margin-top: 25px;
 	text-align: center;
 	white-space: initial;
@@ -388,7 +388,7 @@ body {
 	font-weight: 500;
 }
 
-.footer span {
+.footer #footer-top {
 	font-weight: 800;
 	user-select: none;
 	border-color: rgba(83, 83, 83, 0);
@@ -399,10 +399,24 @@ body {
 	transition: padding 1s, border-color 1s;
 }
 
-.footer span:hover {
+.footer #footer-top:hover {
 	border-color: rgba(83, 83, 83, 1);
 	padding-right: 3px;
 	padding-left: 3px;
+}
+
+#footer-more {
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+.footer-code {
+	font-family: 'Consolas';
+	background-color: rgb(34, 34, 34);
+	white-space: pre-wrap;
+	overflow-x: scroll;
+	max-height: 500px;
+	margin-bottom: 20px;
 }
 
 .about-link {
@@ -432,7 +446,7 @@ body {
 
 	.logo {display: none;}
 
-	.footer, .footer a, .footer span {
+	.footer, .footer a, .footer #footer-top {
 		margin-top: 10px;
 	}
 }
