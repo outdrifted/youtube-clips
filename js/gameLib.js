@@ -61,5 +61,10 @@ const gameLib = {
 		"aliases": ["dead by daylight", "dbd"],
 		"link": "https://store.steampowered.com/app/381210/Dead_by_Daylight/",
 		"icon": "https://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/381210/3d52bda003b28428330a6a08f4b3e1f12a7d4955.jpg"
+	},
+	"Pummel Party": {
+		"aliases": ["pummel party", "pp"],
+		"link": "https://store.steampowered.com/app/880940/Pummel_Party/",
+		"icon": "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/880940/b2261da6c4f14808955181d9b41fdc242685a325.jpg"
 	}
 }
