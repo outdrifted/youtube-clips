@@ -56,5 +56,10 @@ const gameLib = {
 		"aliases": ["valorant"],
 		"link": "https://playvalorant.com/",
 		"icon": "https://yt3.ggpht.com/ytc/AKedOLQ7OQUPtFpLoquv9QGOTNovu0Jv4XoMd6PrszQg=s48-c-k-c0x00ffffff-no-rj"
+	},
+	"Dead By Daylight": {
+		"aliases": ["dead by daylight", "dbd"],
+		"link": "https://store.steampowered.com/app/381210/Dead_by_Daylight/",
+		"icon": "https://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/381210/3d52bda003b28428330a6a08f4b3e1f12a7d4955.jpg"
 	}
 }
