@@ -81,8 +81,8 @@ $(document).ready(function() {
 				break;
 		}
 
-		//#region Get videos via YT API
-		for (const playlistID of playlists) {
+		//#region Get Youtube videos via YT API
+		for (const playlistID of playlists.youtube) {
 			var data = await (async function() {
 				var ret = [];
 				var ret_temp = [];
@@ -114,6 +114,25 @@ $(document).ready(function() {
 		}
 		//#endregion
 
+		//#region Get Medal.tv videos via Medal API https://docs.medal.tv/api#v1latest---latest-clips-from-a-user-or-game
+		for (const playlistID of playlists.medal) {
+			var data = undefined;
+
+			await $.ajax({
+				beforeSend: function(request) {
+					request.setRequestHeader("Authorization", 'pub_9SLaE4VYcyGj3kKZhkIfe5cSNT9r5614');
+				},
+				dataType: "json",
+				url: `https://developers.medal.tv/v1/latest?userId=${playlistID}&muted=0&loop=1`,
+				success: function(returned) {
+					data = returned;
+				}
+			});
+			
+			videos.push(formatVideosMedal(data));
+		}
+		//#endregion
+
 		var videos = [].concat.apply([], videos);
 		var videosNoPrivate = [].concat.apply([], videosNoPrivate);
 
@@ -122,7 +141,7 @@ $(document).ready(function() {
 
 	function main(videos, videosNoPrivate) {
 		$(`.loading`).remove();
-		
+
 		if (!urlVideo) {
 			// No video specified
 			const games = getGames(videos);
@@ -251,7 +270,7 @@ $(document).ready(function() {
 		} else {
 			// Video specified
 			var video = videos.find(v => v.id == urlVideo);
-
+			
 			if (!video) {
 				$('.main').append(`
 				<div class="back">< Back<a href="${window.location.href.replace(`?v=${urlVideo}`, '')}" style="display: block;"><span class="link-spanner"></span></a></div>
@@ -313,50 +332,99 @@ $(document).ready(function() {
 				video_uploadedby = `<div class="video_people_detailed"><a href="${nameLib[video_uploadedby].link}"><img draggable="false" src="${nameLib[video_uploadedby].icon}"></img>${video_uploadedby}</a></div>`;
 			}
 
-			$('.main').append(`
-			<div class="vid-direct">
-				<div class="back">< Back<a href="${window.location.href.replace(`?v=${urlVideo}`, '')}" style="display: block;"><span class="link-spanner"></span></a></div>
-				<div class="video-player-wrapper">
-					<div class="video-player-loading">Loading...</div>
-					<iframe class="video-player" src="https://www.youtube.com/embed/${urlVideo}?rel=0&amp;playlist=${urlVideo}&amp;loop=1&amp;autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>
-				</div>
+			if (video.type == "youtube") {
+				$('.main').append(`
+				<div class="vid-direct">
+					<div class="back">< Back<a href="${window.location.href.replace(`?v=${urlVideo}`, '')}" style="display: block;"><span class="link-spanner"></span></a></div>
+					<div class="video-player-wrapper">
+						<div class="video-player-loading">Loading...</div>
+						<iframe class="video-player" src="https://www.youtube.com/embed/${urlVideo}?rel=0&amp;playlist=${urlVideo}&amp;loop=1&amp;autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>
+					</div>
 
-				<div class="video-info">
-				<div id="main-desc">
-				<div id="vid-title">${video.title}<div class="clip-alerts">${newclip}${highclip}</div></div>
-				<div id="vid-desc">${video.description ? `"${video.description}"` : ""}</div>
-				</div>
-					<table>
-						${video.game != "Other" ? `
-						<tr>
-							<td>Game</td>
-							<td>${game_linkstart}${gameicon}${video.game || "No game specified."}${game_linkend}</td>
-						</tr>
-						` : ``}
-						${video.people.length ? `
-						<tr>
-							<td>People in clip</td>
-							<td>${video_people}</td>
+					<div class="video-info">
+					<div id="main-desc">
+					<div id="vid-title">${video.title}<div class="clip-alerts">${newclip}${highclip}</div></div>
+					<div id="vid-desc">${video.description ? `"${video.description}"` : ""}</div>
+					</div>
+						<table>
+							${video.game != "Other" ? `
+							<tr>
+								<td>Game</td>
+								<td>${game_linkstart}${gameicon}${video.game || "No game specified."}${game_linkend}</td>
+							</tr>
+							` : ``}
+							${video.people.length ? `
+							<tr>
+								<td>People in clip</td>
+								<td>${video_people}</td>
+							</tr>` : ""}
+							${video.recordedBy ? `
+							${video_recordedby}
+							` : ``}
+							<tr>
+								<td>Uploaded by</td>
+								<td>${video_uploadedby}</td>
+							</tr>
+							<tr>
+								<td>Date uploaded</td>
+								<td>${formatDateWithTime(video.dateAdded)}</td>
+							</tr>
+							${video.dateRecorded != Infinity ? `<tr>
+							<td>Date recorded</td>
+							<td>${formatDate(video.dateRecorded)}</td>
 						</tr>` : ""}
-						${video.recordedBy ? `
-						${video_recordedby}
-						` : ``}
-						<tr>
-							<td>Uploaded by</td>
-							<td>${video_uploadedby}</td>
-						</tr>
-						<tr>
-							<td>Date uploaded</td>
-							<td>${formatDateWithTime(video.dateAdded)}</td>
-						</tr>
-						${video.dateRecorded != Infinity ? `<tr>
-						<td>Date recorded</td>
-						<td>${formatDate(video.dateRecorded)}</td>
-					</tr>` : ""}
-					</table>
+						</table>
+					</div>
 				</div>
-			</div>
-			`)
+				`)
+			} else if (video.type == "medal") {
+				var iframe = video.medalIframe.substring(0, 8) + `class="video-player"` + video.medalIframe.substring(7);
+
+				$('.main').append(`
+				<div class="vid-direct">
+					<div class="back">< Back<a href="${window.location.href.replace(`?v=${urlVideo}`, '')}" style="display: block;"><span class="link-spanner"></span></a></div>
+					<div class="video-player-wrapper">
+						<div class="video-player-loading">Loading...</div>
+						${iframe}
+					</div>
+
+					<div class="video-info">
+					<div id="main-desc">
+					<div id="vid-title">${video.title}<div class="clip-alerts">${newclip}${highclip}</div></div>
+					<div id="vid-desc">${video.description ? `"${video.description}"` : ""}</div>
+					</div>
+						<table>
+							${video.game != "Other" ? `
+							<tr>
+								<td>Game</td>
+								<td>${game_linkstart}${gameicon}${video.game || "No game specified."}${game_linkend}</td>
+							</tr>
+							` : ``}
+							${video.people.length ? `
+							<tr>
+								<td>People in clip</td>
+								<td>${video_people}</td>
+							</tr>` : ""}
+							${video.recordedBy ? `
+							${video_recordedby}
+							` : ``}
+							<tr>
+								<td>Uploaded by</td>
+								<td>${video_uploadedby}</td>
+							</tr>
+							<tr>
+								<td>Date uploaded</td>
+								<td>${formatDateWithTime(video.dateAdded)}</td>
+							</tr>
+							${video.dateRecorded != Infinity ? `<tr>
+							<td>Date recorded</td>
+							<td>${formatDate(video.dateRecorded)}</td>
+						</tr>` : ""}
+						</table>
+					</div>
+				</div>
+				`)
+			}
 		}
 
 		var lastUpload = videos.sort(sortByProperty(`-dateAdded`))[0];
@@ -393,6 +461,51 @@ $(document).ready(function() {
 		return result;
 	}
 
+	function formatVideosMedal(videos) {
+		var vidArray = [];
+
+		videos.contentObjects.forEach(vid => {
+			var vidData = {
+				dateAdded: new Date(1606219013000),
+				dateAddedAgo: 1606219013000/1000,
+				description: null,
+				game: vid.categoryId,
+				highlight: false,
+				id: vid.contentId.replace('cid', ''),
+				people: [],
+				private: false,
+				thumbnail: {
+					medium: {
+						url: vid.contentThumbnail
+					}
+				},
+				title: vid.contentTitle,
+				uploadedBy: vid.credits.replace('Credits to ', '').split(' (')[0],
+				recordedBy: vid.credits.replace('Credits to ', '').split(' (')[0],
+				medalIframe: vid.embedIframeCode,
+				type: 'medal'
+			};
+
+			vidData.dateRecorded = vidData.dateAdded;
+			vidData.dateRecordedAgo = vidData.dateAddedAgo;
+
+			for (const [key, val] of Object.entries(nameLib)) {
+				if (val.aliases.includes(vid.credits.replace('Credits to ', '').split(' (')[0].toLowerCase())) {
+					vidData.uploadedBy = key
+					vidData.recordedBy = key
+				};
+			}
+
+			for (const [key, val] of Object.entries(gameLib)) {
+				if (val.aliases.includes(vid.categoryId)) vidData.game = key;
+			}
+
+			vidArray.push(vidData)
+		})
+
+		return vidArray;
+	}
+
 	function formatVideos(videos) {
 		var videoList = [];
 		videos.forEach(video => {
@@ -406,7 +519,8 @@ $(document).ready(function() {
 				thumbnail: video.snippet.thumbnails,
 				dateAdded: video.snippet.publishedAt,
 				dateAddedAgo: Math.abs(new Date() - new Date(video.snippet.publishedAt)),
-				uploadedBy: video.snippet.videoOwnerChannelTitle
+				uploadedBy: video.snippet.videoOwnerChannelTitle,
+				type: 'youtube'
 			}
 
 			for (const [key, val] of Object.entries(nameLib)) {
