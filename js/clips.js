@@ -434,7 +434,7 @@ $(document).ready(function() {
 				<span id="footer-top">Outdrifted © ${new Date().getFullYear()}<br/></span>
 				Clips: ${videos.length} (${videosNoPrivate.length} public, ${videos.length - videosNoPrivate.length} private)<br/>
 				Last upload: ${formatDateWithTime(lastUpload.dateAdded)} by ${lastUpload.uploadedBy}<br/>
-				Clip sources: ${playlists.youtube.length + playlists.medal.length}<br/>
+				Clip sources: ${playlists.youtube.length + playlists.medal.length} (${playlists.youtube.length} YouTube, ${playlists.medal.length} Medal.tv)<br/>
 				Load time: ${Math.floor(performance.now()-startTimer)} ms<br/>
 				<span id="footer-more">Show more</span>
 			</div>
