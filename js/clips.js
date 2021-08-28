@@ -299,10 +299,14 @@ $(document).ready(function() {
 
 			$('title').html(`${video.title.replaceAll(`"`, "&quot;")} - Clips`);
 
-			var newclip = "";
-			if (video.private) newclip = `<span title="This clip won't show up in the clip list. It can only be accessed via direct link." class="clip-alert">Private clip</span>`;
+			// Badges
+			var privclip = "";
 			var highclip = "";
+			var newclip = "";
+			if (video.private) privclip = `<span title="This clip won't show up in the clip list. It can only be accessed via direct link." class="clip-alert">Private clip</span>`;
 			if (video.highlight) highclip = `<span title="This clip will be highlighted in the clip list." class="clip-highlighted-alert">Highlighted clip</span>`;
+			if (video.dateAddedAgo < 432000000) newclip = `<span title="This clip was uploaded in the last 5 days." class="clip-alert">New clip</span>`;
+			
 			var gameicon = "";
 			if (gameLib[video.game] && gameLib[video.game].icon) gameicon = `<span class="game-icon"><img draggable="false" src="${gameLib[video.game].icon}"></img></span>`;
 			var game_linkstart = "", game_linkend = "";
@@ -351,7 +355,7 @@ $(document).ready(function() {
 
 					<div class="video-info">
 					<div id="main-desc">
-					<div id="vid-title">${video.title}<div class="clip-alerts">${newclip}${highclip}</div></div>
+					<div id="vid-title">${video.title}<div class="clip-alerts">${privclip}${newclip}${highclip}</div></div>
 					<div id="vid-desc">${video.description ? `"${video.description}"` : ""}</div>
 					</div>
 						<table>
@@ -437,12 +441,31 @@ $(document).ready(function() {
 
 		var lastUpload = videos.sort(sortByProperty(`-dateAdded`))[0];
 
+		/* 
+		// Dynamic Clip sources
+		var clip_sources = 0;
+		if (Object.keys(playlists).length) {
+			clip_sources = `${Object.keys(playlists).length} (`;
+
+			for (const [key, val] of Object.entries(playlists)) {
+				clip_sources += `${val.length} ${key}`;
+			}
+
+			clip_sources += ")";
+		}
+		*/
+
+		var footer_clips = videos.length;
+		if (videos.length != videosNoPrivate.length) {
+			footer_clips = `${videos.length} (${videosNoPrivate.length} public, ${videos.length - videosNoPrivate.length} private)`;
+		}
+
 		$(`.main`).append(`
 			<div class="footer">
 				<span id="footer-top">Outdrifted © ${new Date().getFullYear()}<br/></span>
-				Clips: ${videos.length} (${videosNoPrivate.length} public, ${videos.length - videosNoPrivate.length} private)<br/>
-				Last upload: ${formatDateWithTime(lastUpload.dateAdded)} by ${lastUpload.uploadedBy}<br/>
-				Clip sources: ${playlists.youtube.length + playlists.medal.length}<br/>
+				Clips: ${footer_clips}<br/>
+				Latest upload: <a href="./?v=${lastUpload.id}">${formatDateWithTime(lastUpload.dateAdded)} by ${lastUpload.uploadedBy}</a><br/>
+				Sources: ${playlists.youtube.length + playlists.medal.length} (${playlists.youtube.length} YouTube, ${playlists.medal.length} Medal.tv)<br/>
 				Load time: ${Math.floor(performance.now()-startTimer)} ms<br/>
 				<span id="footer-more">Show more</span>
 			</div>
