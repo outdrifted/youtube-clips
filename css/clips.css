@@ -78,7 +78,7 @@ body {
 }
 
 .main {
-	width: 1000px;
+	width: 1152px;
 	border-bottom: 0px;
 	border-top: 0px;
 	border-radius: 1px;
@@ -292,7 +292,8 @@ body {
 	position: relative;
 	background-color: #0c0c0c;
 	width: 100%;
-	padding-top: 54.45%;
+	padding-top: 56.25%;
+	height: 0px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -303,6 +304,7 @@ body {
 	position: relative;
 	align-self: center;
 	justify-self: center;
+	margin-bottom: 25px;
 }
 
 .video-player {
@@ -423,14 +425,20 @@ body {
 	color: initial;
 }
 
-@media screen and (min-width: 1040px) {
+@media screen and (min-width: 1950px) {
+	.main {
+		width: 1633px;
+	}
+}
+
+@media screen and (min-width: 1200px) {
 	.main {
 		margin-top: 25px;
 		margin-bottom: 25px;
 	}
 }
 
-@media screen and (max-width: 1040px) {
+@media screen and (max-width: 1200px) {
 	.custom-select {
 		width: 100% !important;
 		margin-bottom: 10px;

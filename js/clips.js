@@ -282,10 +282,18 @@ $(document).ready(function() {
 				return this.replace(new RegExp(str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g,"\\$&"),(ignore?"gi":"g")),(typeof(str2)=="string")?str2.replace(/\$/g,"$$$$"):str2);
 			}
 
+			var meta_description = `<meta property="og:description" content="`;
+			if (video.game != "Other" || video.people.length || video.description) {
+				if (video.game) meta_description += `${video.game} · `
+				if (video.description) meta_description += `„${video.description}“ · `
+				if (video.people.length) meta_description += `${video.people.join(', ')} · `
+			}
+			meta_description += `${formatDate(video.dateRecorded)}" />`;
+
 			$('head').append(`
 				<meta property="og:title" content="${video.title.replaceAll(`"`, "&quot;")} | Clip by ${video.recordedBy || video.uploadedBy}" />
 				<meta property="og:url" content="${window.location.hostname}?v=${video.id}" />
-				<meta property="og:description" content="${video.game ? video.game : "Unknown game"} - ${video.people.join(', ')}\n${formatDate(video.dateRecorded)}" />
+				${meta_description}
 				<meta property="og:image" content="${video.thumbnail.medium.url}" />
 			`)
 
@@ -338,7 +346,7 @@ $(document).ready(function() {
 					<div class="back">< Back<a href="${window.location.href.replace(`?v=${urlVideo}`, '')}" style="display: block;"><span class="link-spanner"></span></a></div>
 					<div class="video-player-wrapper">
 						<div class="video-player-loading">Loading...</div>
-						<iframe class="video-player" src="https://www.youtube.com/embed/${urlVideo}?rel=0&amp;playlist=${urlVideo}&amp;loop=1&amp;autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>
+						<iframe class="video-player" src="https://www.youtube.com/embed/${urlVideo}?rel=0&vq=hd1080&amp;playlist=${urlVideo}&amp;loop=1&amp;autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>
 					</div>
 
 					<div class="video-info">
@@ -434,7 +442,7 @@ $(document).ready(function() {
 				<span id="footer-top">Outdrifted © ${new Date().getFullYear()}<br/></span>
 				Clips: ${videos.length} (${videosNoPrivate.length} public, ${videos.length - videosNoPrivate.length} private)<br/>
 				Last upload: ${formatDateWithTime(lastUpload.dateAdded)} by ${lastUpload.uploadedBy}<br/>
-				Clip sources: ${playlists.youtube.length + playlists.medal.length} (${playlists.youtube.length} YouTube, ${playlists.medal.length} Medal.tv)<br/>
+				Clip sources: ${playlists.youtube.length + playlists.medal.length}<br/>
 				Load time: ${Math.floor(performance.now()-startTimer)} ms<br/>
 				<span id="footer-more">Show more</span>
 			</div>
