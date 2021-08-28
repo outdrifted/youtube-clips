@@ -86,5 +86,25 @@ const gameLib = {
 		"aliases": ["forza horizon 4", "fh4", 352],
 		"link": "https://store.steampowered.com/app/1293830/Forza_Horizon_4/",
 		"icon": "https://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/1293830/7c993f9089d54fe2767efec47b75a7009cdd632e.jpg"
+	},
+	"Watch Dogs 2": {
+		"aliases": ["watch dogs 2", "wd2", 363],
+		"link": "https://store.steampowered.com/app/447040/Watch_Dogs_2/",
+		"icon": "https://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/447040/49dc5c3e4053e40159ffa73d2121daadbc467fe2.jpg"
+	},
+	"SMITE": {
+		"aliases": ["smite", 24],
+		"link": "https://store.steampowered.com/app/386360/SMITE/",
+		"icon": "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/386360/7ed9de7bbfab9accb81e47b84943e7478baf2f3a.jpg"
+	},
+	"Dying Light": {
+		"aliases": ["dying light", "dl", 193],
+		"link": "https://store.steampowered.com/app/239140/Dying_Light_Enhanced_Edition/",
+		"icon": "https://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/239140/d6eafb4fab916ac475bf67054332dd1c0659f8d6.jpg"
+	},
+	"Apex Legends": {
+		"aliases": ["apex", "apex legends", "al", 351],
+		"link": "https://store.steampowered.com/app/1172470/Apex_Legends/",
+		"icon": "https://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/1172470/070902d2389878ac4bf29efb5b92832c60bdf24e.jpg"
 	}
 }
