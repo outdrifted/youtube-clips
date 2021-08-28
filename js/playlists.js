@@ -5,5 +5,6 @@ const playlists = {
 	],
 	medal: [
 		13754957,  /*boynewtoy*/
+		3832163  /*garklon*/
 	]
 }
