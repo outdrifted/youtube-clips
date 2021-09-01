@@ -121,7 +121,7 @@ $(document).ready(function() {
 					request.setRequestHeader("Authorization", 'pub_9SLaE4VYcyGj3kKZhkIfe5cSNT9r5614');
 				},
 				dataType: "json",
-				url: `https://developers.medal.tv/v1/latest?userId=${playlistID}&muted=0&loop=1`,
+				url: `https://developers.medal.tv/v1/latest?userId=${playlistID}&limit=1000`,
 				success: function(returned) {
 					data = returned;
 				}
