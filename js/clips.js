@@ -109,8 +109,6 @@ $(document).ready(function() {
 			for (const d of data) {
 				videos.push(formatVideos(removeUnavailable(d)));
 			}
-
-			videosNoPrivate = videos;
 		}
 		//#endregion
 
@@ -133,11 +131,15 @@ $(document).ready(function() {
 		}
 		//#endregion
 
+		videosNoPrivate = videos;
+
 		var videos = [].concat.apply([], videos);
 		var videosNoPrivate = [].concat.apply([], videosNoPrivate);
 
 		main(videos.sort(sortByProperty(`${sortingReverse}${sortingProperty}`)), removePrivates(videosNoPrivate).sort(sortByProperty(`${sortingReverse}${sortingProperty}`)));
 	})()
+
+	var selected_vid = undefined;
 
 	function main(videos, videosNoPrivate) {
 		$(`.loading`).remove();
@@ -270,6 +272,7 @@ $(document).ready(function() {
 		} else {
 			// Video specified
 			var video = videos.find(v => v.id == urlVideo);
+			selected_vid = video;
 			
 			if (!video) {
 				$('.main').append(`
@@ -428,10 +431,6 @@ $(document).ready(function() {
 								<td>Date uploaded</td>
 								<td>${formatDateWithTime(video.dateAdded)}</td>
 							</tr>
-							${video.dateRecorded != Infinity ? `<tr>
-							<td>Date recorded</td>
-							<td>${formatDate(video.dateRecorded)}</td>
-						</tr>` : ""}
 						</table>
 					</div>
 				</div>
@@ -497,8 +496,8 @@ $(document).ready(function() {
 
 		videos.contentObjects.forEach(vid => {
 			var vidData = {
-				dateAdded: new Date(1606219013000),
-				dateAddedAgo: 1606219013000/1000,
+				dateAdded: new Date(vid.createdTimestamp),
+				dateAddedAgo: Math.abs(new Date() - new Date(vid.createdTimestamp)),
 				description: null,
 				game: vid.categoryId,
 				highlight: false,
@@ -740,6 +739,13 @@ $(document).ready(function() {
 
 	$('body').on('click','#footer-more',function(){
 		$('#footer-more').remove();
+		if (selected_vid) {
+			if (selected_vid.type == "medal") {
+				$(`.main`).append(`Direct link: <a href="https://medal.tv/clips/${selected_vid.id}">https://medal.tv/clips/${selected_vid.id}</a><br><hr>`)
+			} else if (selected_vid.type == "youtube") {
+				$(`.main`).append(`Direct link: <a href="https://youtube.com/watch?v=${selected_vid.id}">https://youtube.com/watch?v=${selected_vid.id}</a><br><hr>`)
+			}
+		}
 		$(`.main`).append(`nameLib.js<pre class="footer-code">${JSON.stringify(nameLib, null, `\t`)}</pre>`)
 		$(`.main`).append(`gameLib.js<pre class="footer-code">${JSON.stringify(gameLib, null, `\t`)}</pre>`)
 	});
