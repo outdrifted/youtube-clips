@@ -106,5 +106,10 @@ const gameLib = {
 		"aliases": ["apex", "apex legends", "al", 351],
 		"link": "https://store.steampowered.com/app/1172470/Apex_Legends/",
 		"icon": "https://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/1172470/070902d2389878ac4bf29efb5b92832c60bdf24e.jpg"
+	},
+	"Euro Truck Simulator 2": {
+		"aliases": ["ets2"],
+		"link": "https://store.steampowered.com/app/227300/Euro_Truck_Simulator_2/",
+		"icon": "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/227300/adc18a4fc9adc0330144b76d61cbda68bb2394a0.jpg"
 	}
 }
