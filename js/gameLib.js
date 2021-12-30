@@ -108,8 +108,13 @@ const gameLib = {
 		"icon": "https://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/1172470/070902d2389878ac4bf29efb5b92832c60bdf24e.jpg"
 	},
 	"Euro Truck Simulator 2": {
-		"aliases": ["ets2"],
+		"aliases": ["euro truck simulator 2", "ets2"],
 		"link": "https://store.steampowered.com/app/227300/Euro_Truck_Simulator_2/",
 		"icon": "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/227300/adc18a4fc9adc0330144b76d61cbda68bb2394a0.jpg"
+	},
+	"Prey": {
+		"aliases": ["prey"],
+		"link": "https://store.steampowered.com/app/480490/Prey/",
+		"icon": "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/480490/5ef565e374f039469e4a5c332cd51584af7ec5db.jpg"
 	}
 }
