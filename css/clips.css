@@ -183,6 +183,7 @@ body {
 	cursor: pointer;
 	user-select: none;
 	min-width: 200px;
+	width: 200px;
 	flex: 1;
 	background-color: #181818;
 	border-radius: 5px;
@@ -255,6 +256,8 @@ body {
 	margin-top: -3px;
 	padding-bottom: 5px;
 	font-weight: 400;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .video-thumbnail {
