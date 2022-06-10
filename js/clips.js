@@ -545,7 +545,6 @@ $(document).ready(function() {
 
 			r = {
 				id: video.snippet.resourceId.videoId,
-				title: video.snippet.title,
 				thumbnail: video.snippet.thumbnails,
 				dateAdded: video.snippet.publishedAt,
 				dateAddedAgo: Math.abs(new Date() - new Date(video.snippet.publishedAt)),
@@ -582,6 +581,16 @@ $(document).ready(function() {
 				r.people = peopleArray;
 				r.people.sort();
 			} else { r.people = [] }
+
+			if (description.includes("title(")) {
+				var searchFor = `title(`;
+				var len = searchFor.length;
+
+				r.title = description.substring(
+					description.lastIndexOf(searchFor) + len, 
+					description.indexOf(")", description.lastIndexOf(searchFor) + len)
+				);
+			} else { r.title = video.snippet.title }
 
 			if (description.includes("game(")) {
 				var searchFor = `game(`;
