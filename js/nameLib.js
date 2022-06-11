@@ -4,6 +4,11 @@ const nameLib = {
 		"link": "https://steamcommunity.com/profiles/76561198130515965",
 		"icon": "https://avatars.cloudflare.steamstatic.com/ded426e17ff06a0a6dd124b5b04691ff1c89442c_full.jpg"
 	},
+	"Rokas": {
+		"aliases": ["rokas"],
+		"link": "https://steamcommunity.com/id/narkovichh",
+		"icon": "https://avatars.cloudflare.steamstatic.com/5d447a61104a3e1ac77ade246a87c6dbc5592791_full.jpg"
+	}
 	"Obuolių sultys": {
 		"aliases": ["thekushmaster", "thekushmeistr", "deimis", "deimantas"],
 		"link": "https://steamcommunity.com/profiles/76561198130110370",
