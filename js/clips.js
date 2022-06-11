@@ -82,7 +82,7 @@ $(document).ready(function() {
 		}
 
 		//#region Get Youtube videos via YT API
-		for (const playlistID of playlists.youtube) {
+		for (const playlistID of source.playlists.youtube) {
 			var data = await (async function() {
 				var ret = [];
 				var ret_temp = [];
@@ -105,15 +105,36 @@ $(document).ready(function() {
 
 				return ret;
 			})()
-
+			
 			for (const d of data) {
 				videos.push(formatVideos(removeUnavailable(d)));
 			}
 		}
+
+		for (const videoID of source.clips.youtube) {
+			await (async function() {
+				var ret = undefined;
+
+				var options = {
+					part: 'snippet',
+					key: 'AIzaSyCb62u0hNUTyUtcdOi-VbZtSNtisI7uCB0',
+					id: videoID,
+					url: 'https://www.googleapis.com/youtube/v3/videos'
+				};
+				
+				await (async function getVids() {
+					await $.getJSON(options.url, options, function (data) {return ret = data;})})()
+
+				return ret;
+			})().then(r => videos.push(formatVideos(removeUnavailable(r))))
+			
+			//console.log(data);
+			
+		}
 		//#endregion
 
 		//#region Get Medal.tv videos via Medal API https://docs.medal.tv/api#v1latest---latest-clips-from-a-user-or-game
-		for (const playlistID of playlists.medal) {
+		for (const playlistID of source.playlists.medal) {
 			var data = undefined;
 
 			await $.ajax({
@@ -464,7 +485,7 @@ $(document).ready(function() {
 				<span id="footer-top">Outdrifted © ${new Date().getFullYear()}<br/></span>
 				Clips: ${footer_clips}<br/>
 				Latest upload: <a href="./?v=${lastUpload.id}">${formatDateWithTime(lastUpload.dateAdded)} by ${lastUpload.uploadedBy}</a><br/>
-				Sources: ${playlists.youtube.length + playlists.medal.length} (${playlists.youtube.length} YouTube, ${playlists.medal.length} Medal.tv)<br/>
+				Sources: ${source.playlists.youtube.length + source.playlists.medal.length} (${source.playlists.youtube.length} YouTube, ${source.playlists.medal.length} Medal.tv)<br/>
 				Load time: ${Math.floor(performance.now()-startTimer)} ms<br/>
 				<span id="footer-more">Show more</span>
 			</div>
@@ -542,13 +563,13 @@ $(document).ready(function() {
 			var r = null;
 
 			if (video.snippet.description.includes("This video is")) return r;
-
+			
 			r = {
-				id: video.snippet.resourceId.videoId,
+				id: video.snippet.resourceId ? video.snippet.resourceId.videoId : video.id,
 				thumbnail: video.snippet.thumbnails,
 				dateAdded: video.snippet.publishedAt,
 				dateAddedAgo: Math.abs(new Date() - new Date(video.snippet.publishedAt)),
-				uploadedBy: video.snippet.videoOwnerChannelTitle,
+				uploadedBy: video.snippet.channelTitle,
 				type: 'youtube'
 			}
 

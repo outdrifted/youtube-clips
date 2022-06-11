@@ -30,7 +30,7 @@ const nameLib = {
 		"icon": "https://avatars.cloudflare.steamstatic.com/5cc10263e4a9d3d3a31808dffe43a19a92aa893f_full.jpg"
 	},
 	"GarklOn": {
-		"aliases": ["garklon"],
+		"aliases": ["garklon", "gvidas bo"],
 		"link": "https://steamcommunity.com/profiles/76561198199183528",
 		"icon": "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/items/1504020/5f89df05b4d4463f9fd2aac1fe5bafc836d1ffdf.gif"
 	},
