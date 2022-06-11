@@ -8,7 +8,7 @@ const nameLib = {
 		"aliases": ["rokas"],
 		"link": "https://steamcommunity.com/id/narkovichh",
 		"icon": "https://avatars.cloudflare.steamstatic.com/5d447a61104a3e1ac77ade246a87c6dbc5592791_full.jpg"
-	}
+	},
 	"Obuolių sultys": {
 		"aliases": ["thekushmaster", "thekushmeistr", "deimis", "deimantas"],
 		"link": "https://steamcommunity.com/profiles/76561198130110370",
