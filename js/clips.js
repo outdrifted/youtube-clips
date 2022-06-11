@@ -563,7 +563,7 @@ $(document).ready(function() {
 			var r = null;
 
 			if (video.snippet.description.includes("This video is")) return r;
-			
+
 			r = {
 				id: video.snippet.resourceId ? video.snippet.resourceId.videoId : video.id,
 				thumbnail: video.snippet.thumbnails,
@@ -674,6 +674,13 @@ $(document).ready(function() {
 				r.highlight = true;
 			} else { r.highlight = false }
 			//#endregion
+
+			// OVERRIDES
+			if (Object.keys(overrides).includes(r.id)) {
+				for (const [key, val] of Object.entries(overrides[r.id])) {
+					r[key] = val;
+				}
+			}
 
 			videoList.push(r)
 		});
