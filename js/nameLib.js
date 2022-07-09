@@ -1,6 +1,6 @@
 const nameLib = {
 	"yummy": {
-		"aliases": ["outdrifted", "yummy", "williuz", "viluhas", "džūmi"],
+		"aliases": ["vilius", "outdrifted", "yummy", "williuz", "viluhas", "džūmi"],
 		"link": "https://steamcommunity.com/profiles/76561198130515965",
 		"icon": "https://avatars.cloudflare.steamstatic.com/ded426e17ff06a0a6dd124b5b04691ff1c89442c_full.jpg"
 	},
