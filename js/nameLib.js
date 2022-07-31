@@ -84,7 +84,11 @@ const nameLib = {
 	"Dovisx": {
 		"aliases": ["dovisx"],
 		"link": "https://steamcommunity.com/profiles/76561198263736652",
-		"icon": "https://avatars.cloudflare.steamstatic.com/692fd3799552482f06b998a685cf7c12de3e0b5c_full.jpg"
+		"icon": "https://avatars.cloudflare.steamstatic.com/692fd3799552482f06b998a685cf7c12de3e0b5c_full.jpg",
+		"profile": {
+			"banner": "https://cdn.discordapp.com/attachments/243657564859006976/1003364139323887767/Untitled.png",
+			"bio": "patinka virai"
+		}
 	},
 	"H0pPer": {
 		"aliases": ["hopper", "hopperx", "h0pper", "h0pperx", "hupeeer", "hupper"],
