@@ -8,6 +8,70 @@
 	color: white;
 }
 
+.heading {
+	font-size: 1.6rem;
+}
+
+.profileInfo {
+	margin-top: 25px;
+	margin-bottom: 50px;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+}
+
+.profileClipsText {
+	font-size: 1.6rem;
+	margin: 6px;
+	margin-bottom: 10px;
+}
+
+.profileInfo .banner {
+	margin-top: -25px;
+	min-width: 100% !important;
+	max-width: 100% !important;
+	height: 300px;
+	object-fit: cover;
+	filter: brightness(1);
+	border-radius: 0px 0px 30px 30px;
+	user-select: none;
+	pointer-events: none;
+}
+
+.profileInfo .profileBio {
+	margin-bottom: 10px;
+	text-align: center;
+}
+
+.profileInfo .profilePic {
+	width: 184px;
+	height: 184px;
+	border-radius: 25px;
+}
+
+.profileInfo .profilePicBanner {
+	margin-top: -92px;
+	box-shadow: 0px -20px 50px #000000;
+	z-index: 1;
+}
+
+.profileInfo .profileLinks {
+	display: flex;
+	gap: 10px
+}
+
+.profileInfo .profileLinks a img {
+	height: 50px;
+	width: 50px;
+	border-radius: 30px;
+}
+
+.profileInfo .profileName {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	font-size: 1.6rem;
+}
+
 #vid-title {
 	font-size: 2rem;
 }
@@ -183,6 +247,7 @@ body {
 	cursor: pointer;
 	user-select: none;
 	min-width: 200px;
+	max-width: 300px;
 	width: 200px;
 	flex: 1;
 	background-color: #181818;
@@ -386,13 +451,16 @@ body {
 
 .back {
 	background-color: #0c0c0c;
-	padding: 10px;
+	padding: 5px;
 	border-top-left-radius: 5px;
 	border-top-right-radius: 5px;
 	cursor: pointer;
 	user-select: none;
-	font-size: 1.2rem;
+	font-size: 1.6rem;
 	position: relative;
+	text-align: center;
+	font-variant: small-caps;
+	letter-spacing: 5px;
 }
 
 .video-info {
@@ -476,5 +544,13 @@ body {
 
 	.footer, .footer a, .footer #footer-top {
 		margin-top: 10px;
+	}
+
+	.profileInfo .banner {
+		height: 150px;
+	}
+
+	.video {
+		max-width: none;
 	}
 }

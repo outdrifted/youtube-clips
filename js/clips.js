@@ -31,6 +31,12 @@ $(document).ready(function() {
 		if (data == "") return null;
 		return decodeURI(data);
 	})();
+	const urlProfile = (function() {
+		if (urlData == null) return null;
+		var data = urlData.split('?p=').pop().split('?')[0];
+		if (data == "") return null;
+		return decodeURI(data);
+	})();
 	/*
 	const urlPeople = (function() {
 		if (urlData == null) return null;
@@ -55,11 +61,11 @@ $(document).ready(function() {
 	})();
 	*/
 	//#endregion
-
+	
 	(async function() {
 		var videos = [];
 		var videosNoPrivate = [];
-
+		
 		var sortingProperty = "";
 		var sortingReverse = "";
 		switch (urlSorting) {
@@ -80,7 +86,7 @@ $(document).ready(function() {
 				sortingReverse = "";
 				break;
 		}
-
+		
 		//#region Get Youtube videos via YT API
 		for (const playlistID of source.playlists.youtube) {
 			var data = await (async function() {
@@ -165,7 +171,139 @@ $(document).ready(function() {
 	function main(videos, videosNoPrivate) {
 		$(`.loading`).remove();
 
-		if (!urlVideo) {
+		if (urlProfile) {
+			console.log(urlProfile)
+			// Fetch profile info
+			var name = undefined;
+			var info = undefined;
+			for ([key, val] of Object.entries(nameLib)) {
+				try {
+					if (val.aliases.includes(urlProfile.toLowerCase()) || val.profile.url == urlProfile.toLowerCase()) {
+						info = val;
+						name = key;
+					}
+				} catch {}
+			}
+
+			// If profile not found, show error
+			if (info) {
+				// If banner exists, display it
+				if (info.profile && info.profile.banner && info.profile.banner != "") {
+					$('.main').prepend(`
+					<div class="profileInfo">
+						<img class="banner" src="${info.profile.banner}">
+						<img class="profilePic profilePicBanner" src="${info.icon}">
+						<h1 class="profileName">${name}</h1>
+					</div>
+				`);
+				} else {
+					$('.main').prepend(`
+					<div class="profileInfo">
+						<img class="profilePic" src="${info.icon}">
+						<h1 class="profileName">${name}</h1>
+					</div>
+				`);
+				}
+
+				// If bio exists, display it
+				if (info.profile && info.profile.bio && info.profile.bio != "") {
+					$('.profileInfo').append(`
+						<div class="profileBio">${info.profile.bio}</div>
+					`);
+					
+					if (info.profile.links) {
+						info.profile.links.forEach(link => {
+							$('.profileLinks').append(`<a title="${link.name}" href="${link.url}"><img src="${link.icon}"></img></a>`);
+						});
+					}
+					
+				}
+
+				// If links exist, display them
+				$('.profileInfo').append(`
+						<div class="profileLinks">
+						<a title="Steam" href="${info.link}"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/640px-Steam_icon_logo.svg.png"></img></a>
+						</div>
+					`);
+				if (info.profile && info.profile.links) {					
+					info.profile.links.forEach(link => {
+						$('.profileLinks').append(`<a title="${link.name}" href="${link.url}"><img src="${link.icon}"></img></a>`);
+					});
+				}
+
+				//#region Clips
+				console.log(videosNoPrivate);
+
+				videosNoPrivate.forEach(video => {
+					if (!video.people.includes(name)) return;
+					if (urlGame && video.game != urlGame) return;
+					if (urlUploader && /*video.uploadedBy*/ video.recordedBy != urlUploader) return;
+	
+					var vid_desc = "";
+					var vid_game = ``;
+					var vid_new = ``;
+					var vid_highlight = ``;
+					var vid_uploadedBy = ``;
+		
+					if (video.description) vid_desc = `<div class="video-description">"${video.description}"</div>`
+					if (video.dateAddedAgo < 432000000) var vid_new = `<div class="new-clip">NEW!</div>`;
+					if (video.highlight) vid_highlight = `<div class="clip_highlighted_popout">🔥</div>`;
+					
+					var searchby = video.uploadedBy;
+					if (video.recordedBy) searchby = video.recordedBy;
+	
+					if (nameLib[searchby]) {
+						vid_uploadedBy += `<div class="video_uploadedBy"><img draggable="false" src="${nameLib[searchby].icon}"></img>${searchby}</div>`;
+					} else vid_uploadedBy += `<div class="video_uploadedBy">${searchby}</div>`;
+	
+					//if (video.game) vid_game = `<div class="video_people_detailed video-game"><img draggable="false" src="${gameLib[video.game].icon}"></img>${video.game}</div>`
+		
+					if (video.game && (video.game != "Other")) {
+						vid_game += `<div class="video_game">${gameLib[video.game] && gameLib[video.game].icon ? `<img draggable="false" src="${gameLib[video.game].icon}"></img>` : ""}${video.game}</div>`;
+					} else vid_game += `<div class="video-game">‎</div>`;
+	
+					/*
+					<div class="video-date">${formatDate(video.dateRecorded || video.dateAdded)}</div>
+					*/
+	
+					$('.video-list').append(`
+						<div class="video ${video.highlight ? "clip_highlighted" : ""}" id="clip-${video.id}">
+							<div>
+							<div class="popouts">
+							${vid_new}
+							${vid_highlight}
+							</div>
+							<img class="video-thumbnail" draggable="false" src="${video.thumbnail.medium.url}"></img>
+							</div>
+							<div class="description">
+								<div>
+									<div class="video-title">${video.title}</div>
+									${vid_desc}
+								</div>
+								<div class="video-footer">
+									${vid_uploadedBy}
+									${vid_game}
+								</div>
+							</div>
+							<a href="${`./?v=${video.id}`}" style="display: block;"><span class="link-spanner"></span></a>
+						</div>
+					`);
+				})
+				//#endregion
+			} else {
+				$('.main').append(`
+					<div class="error" style="border-top-left-radius: 0px; border-top-right-radius: 0px;margin:0px">Profile not found.</div>
+				`);
+			}
+
+			$('.main').prepend(`
+				<div class="back">clips.outdrifted.com<a href="./" style="display: block;"><span class="link-spanner"></span></a></div>
+			`);
+
+			if ($(`.video`).length > 0) {
+				$(`<h1 class="profileClipsText">Clips ${name} is in:</h1>`).insertAfter(`.profileInfo`)
+			}
+		} else if (!urlVideo) {
 			// No video specified
 			const games = getGames(videos);
 			if (urlGame) {
@@ -290,14 +428,14 @@ $(document).ready(function() {
 			}
 
 			$('title').html($(`#select-game`).find(':selected').val() ? `${$(`#select-game`).find(':selected').val()} - Clips` : "Clips");
-		} else {
+		} else if (urlVideo) {
 			// Video specified
 			var video = videos.find(v => v.id == urlVideo);
 			selected_vid = video;
 			
 			if (!video) {
 				$('.main').append(`
-				<div class="back">< Back<a href="${window.location.href.replace(`?v=${urlVideo}`, '')}" style="display: block;"><span class="link-spanner"></span></a></div>
+				<div class="back">clips.outdrifted.com<a href="./" style="display: block;"><span class="link-spanner"></span></a></div>
 				<div class="error" style="border-top-left-radius: 0px; border-top-right-radius: 0px;margin:0px">Clip not found.</div>
 				`);
 			}
@@ -345,7 +483,8 @@ $(document).ready(function() {
 				var html = `<div class="video_people_detailed_list">`;
 				video.people.forEach(person => {
 					if (nameLib[person]) {
-						html += `<div class="video_people_detailed"><a href="${nameLib[person].link}"><img draggable="false" src="${nameLib[person].icon}"></img>${person}</a></div>`;
+						console.log(nameLib[person]);
+						html += `<div class="video_people_detailed"><a href="${`./?p=${person}`}"><img draggable="false" src="${nameLib[person].icon}"></img>${person}</a></div>`;
 					} else html += `<div class="video_people_detailed">${person}</div>`;
 				})
 				video_people = html + `</div>`;
@@ -355,7 +494,7 @@ $(document).ready(function() {
 			if (video.recordedBy != video.uploadedBy) {
 				video_recordedby = video.recordedBy;
 				if (nameLib[video_recordedby]) {
-					video_recordedby = `<div class="video_people_detailed"><a href="${nameLib[video_recordedby].link}"><img draggable="false" src="${nameLib[video_recordedby].icon}"></img>${video_recordedby}</a></div>`;
+					video_recordedby = `<div class="video_people_detailed"><a href="${`./?p=${video_recordedby}`}"><img draggable="false" src="${nameLib[video_recordedby].icon}"></img>${video_recordedby}</a></div>`;
 				}
 				video_recordedby = `<tr>
 				<td>Recorded by</td>
@@ -365,13 +504,13 @@ $(document).ready(function() {
 
 			var video_uploadedby = video.uploadedBy;
 			if (nameLib[video_uploadedby]) {
-				video_uploadedby = `<div class="video_people_detailed"><a href="${nameLib[video_uploadedby].link}"><img draggable="false" src="${nameLib[video_uploadedby].icon}"></img>${video_uploadedby}</a></div>`;
+				video_uploadedby = `<div class="video_people_detailed"><a href="${`./?p=${video_uploadedby}`}"><img draggable="false" src="${nameLib[video_uploadedby].icon}"></img>${video_uploadedby}</a></div>`;
 			}
 
 			if (video.type == "youtube") {
 				$('.main').append(`
 				<div class="vid-direct">
-					<div class="back">< Back<a href="${window.location.href.replace(`?v=${urlVideo}`, '')}" style="display: block;"><span class="link-spanner"></span></a></div>
+					<div class="back">clips.outdrifted.com<a href="./" style="display: block;"><span class="link-spanner"></span></a></div>
 					<div class="video-player-wrapper">
 						<div class="video-player-loading">Loading...</div>
 						<iframe class="video-player" src="https://www.youtube.com/embed/${urlVideo}?rel=0&vq=hd1080&amp;playlist=${urlVideo}&amp;loop=1&amp;autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>
@@ -418,7 +557,7 @@ $(document).ready(function() {
 
 				$('.main').append(`
 				<div class="vid-direct">
-					<div class="back">< Back<a href="${window.location.href.replace(`?v=${urlVideo}`, '')}" style="display: block;"><span class="link-spanner"></span></a></div>
+					<div class="back">clips.outdrifted.com<a href="./" style="display: block;"><span class="link-spanner"></span></a></div>
 					<div class="video-player-wrapper">
 						<div class="video-player-loading">Loading...</div>
 						${iframe}

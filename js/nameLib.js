@@ -2,7 +2,20 @@ const nameLib = {
 	"yummy": {
 		"aliases": ["vilius", "vilius diglys", "outdrifted", "yummy", "williuz", "viluhas", "džūmi"],
 		"link": "https://steamcommunity.com/profiles/76561198130515965",
-		"icon": "https://avatars.cloudflare.steamstatic.com/ded426e17ff06a0a6dd124b5b04691ff1c89442c_full.jpg"
+		"icon": "https://avatars.cloudflare.steamstatic.com/ded426e17ff06a0a6dd124b5b04691ff1c89442c_full.jpg",
+		"profile": {
+			"name": "yummy",
+			"banner": "https://i.pinimg.com/originals/75/12/37/751237d9a75bfbe1ba9fb681c9ed5e0d.jpg", /*https://wallpaperforu.com/wp-content/uploads/2020/07/dark-wallpaper-20072813214381366x768.jpg*/
+			"url": "outdrifted",
+			"bio": "Dev & Admin",
+			"links": [
+				{
+					"name": "Website",
+					"url": "https://outdrifted.com/",
+					"icon": "https://i1.sndcdn.com/artworks-000590443583-exzk78-t500x500.jpg"
+				}
+			]
+		}
 	},
 	"Rokas": {
 		"aliases": ["rokas"],
@@ -10,7 +23,7 @@ const nameLib = {
 		"icon": "https://avatars.cloudflare.steamstatic.com/5d447a61104a3e1ac77ade246a87c6dbc5592791_full.jpg"
 	},
 	"Obuolių sultys": {
-		"aliases": ["thekushmaster", "thekushmeistr", "deimis", "deimantas"],
+		"aliases": ["obuolių sultys", "thekushmaster", "thekushmeistr", "deimis", "deimantas"],
 		"link": "https://steamcommunity.com/profiles/76561198130110370",
 		"icon": "https://avatars.cloudflare.steamstatic.com/9efd41d1509adc91a242d2d60375b0f0519b3d40_full.jpg"
 	},
@@ -42,7 +55,11 @@ const nameLib = {
 	"jungy": {
 		"aliases": ["jungy"],
 		"link": "https://steamcommunity.com/profiles/76561198062453585",
-		"icon": "https://avatars.cloudflare.steamstatic.com/e63f0ac1b3db5780c0a62bcf3aa21716831d539d_full.jpg"
+		"icon": "https://avatars.cloudflare.steamstatic.com/e63f0ac1b3db5780c0a62bcf3aa21716831d539d_full.jpg",
+		"profile": {
+			"banner": "https://cdn.wallpapersafari.com/70/78/nQt3l9.jpg",
+			"bio": "kibiriukas"
+		}
 	},
 	"oo zeniau": {
 		"aliases": ["oo zeniau", "gru", "seriogaman", "m1nt0z"],
@@ -50,7 +67,7 @@ const nameLib = {
 		"icon": "https://avatars.cloudflare.steamstatic.com/37c7384f6c967939e5fcdd8a14619a752a0c3b75_full.jpg"
 	},
 	"Passat Rider": {
-		"aliases": ["perceptionist", "devaulex"],
+		"aliases": ["perceptionist", "devaulex", "passat rider"],
 		"link": "https://steamcommunity.com/profiles/76561198130847328",
 		"icon": "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/items/1239690/8aca0a49634a18fd91770b8f7cab25aaa3dbdb50.gif"
 	},
@@ -60,7 +77,7 @@ const nameLib = {
 		"icon": "https://avatars.cloudflare.steamstatic.com/a1212558359254619d21c1241b46f15fad77dc47_full.jpg"
 	},
 	"Čiop": {
-		"aliases": ["avokenn"],
+		"aliases": ["avokenn", "čiop"],
 		"link": "https://steamcommunity.com/profiles/76561198314613713",
 		"icon": "https://avatars.cloudflare.steamstatic.com/c6e5d2078a89dddeca8261ea7e8689526236a114_full.jpg"
 	},
