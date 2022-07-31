@@ -50,7 +50,10 @@ const nameLib = {
 	"GarklOn": {
 		"aliases": ["garklon", "gvidas bo"],
 		"link": "https://steamcommunity.com/profiles/76561198199183528",
-		"icon": "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/items/1504020/5f89df05b4d4463f9fd2aac1fe5bafc836d1ffdf.gif"
+		"icon": "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/items/1504020/5f89df05b4d4463f9fd2aac1fe5bafc836d1ffdf.gif",
+		"profile: {
+			"banner": "https://cdn.discordapp.com/attachments/249531426993733632/1003366484942270504/flat1000x1000075f.jpg"
+		}
 	},
 	"jungy": {
 		"aliases": ["jungy"],
