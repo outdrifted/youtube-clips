@@ -13,7 +13,8 @@ const source = {
 	},
 	clips: { // Manual links to clips (if want to upload a singular clip instead of a whole playlist). Specify only ID's of videos.
 		youtube: [
-			"vy9iZZ9FmLo"
+			"vy9iZZ9FmLo", /* prapal chelovek */
+			"eV3_TMdSMK8" /* kas ce pareina */
 		],
 		medal: [
 			
