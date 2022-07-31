@@ -41,7 +41,7 @@ const nameLib = {
 		"aliases": ["hatman"],
 		"link": "https://steamcommunity.com/profiles/76561198142509642",
 		"icon": "https://avatars.cloudflare.steamstatic.com/069f45c6e4e9be73d9ab0f5603c09fce7d258a5b_full.jpg",
-		"profile":{"banner": "https://cdn.discordapp.com/attachments/243657564859006976/1003369059838070865/ezgif.com-gif-maker.gif"}
+		"profile":{"bio":"homeless please give food","banner": "https://cdn.discordapp.com/attachments/243657564859006976/1003369059838070865/ezgif.com-gif-maker.gif"}
 	},
 	"BoyNewToy": {
 		"aliases": ["boynewtoy"],
