@@ -15,6 +15,7 @@ const source = {
 		youtube: [
 			"vy9iZZ9FmLo", /* prapal chelovek */
 			"eV3_TMdSMK8", /* kas ce pareina */
+			"QUPopBp2iYk", /* kas ce pareina 2 */
 			"OIEuLLC2SmQ" /* ugnius kabum */
 		],
 		medal: [
