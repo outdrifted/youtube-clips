@@ -14,17 +14,17 @@ const overrides = { // Override data on certain clips.
     "QUPopBp2iYk": {
         name: "kas ce pareina #2",
         people: ['jungy', 'GarklOn', 'yummy'],
-        game: 'RL',
+        game: 'rl',
         dateRecorded: "2021-06-22"
     },
     "OIEuLLC2SmQ": {
         people: ['jungy', 'GarklOn', 'yummy'],
-        game: 'RL',
+        game: 'rl',
         dateRecorded: "2021-06-21"
     },
-    "vy9iZZ9FmLo": {
+    "eV3_TMdSMK8": {
         people: ['jungy', 'GarklOn', 'yummy'],
-        game: 'RL',
-        dateRecorded: "2021-06-21"
+        game: 'rl',
+        dateRecorded: "2021-06-22"
     }
 }
