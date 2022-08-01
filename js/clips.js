@@ -473,7 +473,7 @@ $(document).ready(function() {
 			if (gameLib[video.game] && gameLib[video.game].icon) gameicon = `<span class="game-icon"><img draggable="false" src="${gameLib[video.game].icon}"></img></span>`;
 			var game_linkstart = "", game_linkend = "";
 			if (gameLib[video.game] && gameLib[video.game].link) {
-				game_linkstart = `<a href="${gameLib[video.game].link}">`;
+				game_linkstart = `<a href="./?g=${video.game}">`;
 				game_linkend = `</a>`;
 			}
 
