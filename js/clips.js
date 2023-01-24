@@ -550,7 +550,7 @@ $(document).ready(function() {
 						</tr>` : ""}
 						</table>
 						<br>
-						<p id="video-is-unavailable">⚠️ If the player shows "This video is unavailable", refresh the page and the clip should load.<br>⚠️ For the best viewing experience, set the playback quality to 1440p60<sup>HD</sup> (if available)</p>
+						<p id="video-is-unavailable">⚠️ If the player shows "This video is unavailable", refresh the page and the clip should load.<br>❗ For the best viewing experience, set the playback quality to 1440p60<sup>HD</sup> or 1920p60<sup>HD</sup> (if available)</p>
 						
 					</div>
 				</div>
