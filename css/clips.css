@@ -513,6 +513,13 @@ body {
 	color: initial;
 }
 
+#video-is-unavailable {
+	background-color: rgb(32, 32, 32);
+	font-weight: 600;
+	padding: 10px;
+	border-radius: 10px;
+}
+
 @media screen and (min-width: 1950px) {
 	.main {
 		width: 1633px;

@@ -550,7 +550,8 @@ $(document).ready(function() {
 						</tr>` : ""}
 						</table>
 						<br>
-						<p><i>TIP: If the player shows "This video is unavailable", refresh the page and the clip should load.</i></p>
+						<p id="video-is-unavailable">⚠️ If the player shows "This video is unavailable", refresh the page and the clip should load.</p>
+						
 					</div>
 				</div>
 				`)
