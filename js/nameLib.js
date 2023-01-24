@@ -1,21 +1,21 @@
 const nameLib = {
 	"yummy": {
-		"aliases": ["vilius", "vilius diglys", "outdrifted", "yummy", "williuz", "viluhas", "džūmi"],
+		"aliases": ["outdrifted", "yummy", "viluhas", "džūmi"],
 		"link": "https://steamcommunity.com/profiles/76561198130515965",
 		"icon": "https://avatars.cloudflare.steamstatic.com/ded426e17ff06a0a6dd124b5b04691ff1c89442c_full.jpg",
-		"profile": {
-			"name": "yummy",
-			"banner": "https://i.pinimg.com/originals/75/12/37/751237d9a75bfbe1ba9fb681c9ed5e0d.jpg", /*https://wallpaperforu.com/wp-content/uploads/2020/07/dark-wallpaper-20072813214381366x768.jpg*/
-			"url": "outdrifted",
-			"bio": "Dev & Admin",
-			"links": [
-				{
-					"name": "Website",
-					"url": "https://outdrifted.com/",
-					"icon": "https://i1.sndcdn.com/artworks-000590443583-exzk78-t500x500.jpg"
-				}
-			]
-		}
+// 		"profile": {
+// 			"name": "yummy",
+// 			"banner": "https://i.pinimg.com/originals/75/12/37/751237d9a75bfbe1ba9fb681c9ed5e0d.jpg", /*https://wallpaperforu.com/wp-content/uploads/2020/07/dark-wallpaper-20072813214381366x768.jpg*/
+// 			"url": "outdrifted",
+// 			"bio": "Dev & Admin",
+// 			"links": [
+// 				{
+// 					"name": "Website",
+// 					"url": "https://outdrifted.com/",
+// 					"icon": "https://i1.sndcdn.com/artworks-000590443583-exzk78-t500x500.jpg"
+// 				}
+// 			]
+// 		}
 	},
 	"Rokas": {
 		"aliases": ["rokas"],
