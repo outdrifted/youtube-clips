@@ -87,6 +87,9 @@ $(document).ready(function() {
 				break;
 		}
 		
+		var youtube_api_key = process.env.YOUTUBE_API; // AIzaSyCb62u0hNUTyUtcdOi-VbZtSNtisI7uCB0
+		var medal_api_key = process.env.YOUTUBE_API; // pub_9SLaE4VYcyGj3kKZhkIfe5cSNT9r5614
+		
 		//#region Get Youtube videos via YT API
 		for (const playlistID of source.playlists.youtube) {
 			var data = await (async function() {
@@ -95,7 +98,7 @@ $(document).ready(function() {
 
 				var options = {
 					part: 'snippet',
-					key: 'AIzaSyCb62u0hNUTyUtcdOi-VbZtSNtisI7uCB0',
+					key: youtube_api_key,
 					maxResults: 50,
 					playlistId: playlistID,
 					url: 'https://www.googleapis.com/youtube/v3/playlistItems'
@@ -123,7 +126,7 @@ $(document).ready(function() {
 
 				var options = {
 					part: 'snippet',
-					key: 'AIzaSyCb62u0hNUTyUtcdOi-VbZtSNtisI7uCB0',
+					key: youtube_api_key,
 					id: videoID,
 					url: 'https://www.googleapis.com/youtube/v3/videos'
 				};
@@ -145,7 +148,7 @@ $(document).ready(function() {
 
 			await $.ajax({
 				beforeSend: function(request) {
-					request.setRequestHeader("Authorization", 'pub_9SLaE4VYcyGj3kKZhkIfe5cSNT9r5614');
+					request.setRequestHeader("Authorization", medal_api_key);
 				},
 				dataType: "json",
 				url: `https://developers.medal.tv/v1/latest?userId=${playlistID}&limit=1000`,
