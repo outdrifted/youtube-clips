@@ -549,6 +549,9 @@ $(document).ready(function() {
 							<td>${formatDate(video.dateRecorded)}</td>
 						</tr>` : ""}
 						</table>
+						<br>
+						<p id="video-is-unavailable">⚠️ If the player shows "This video is unavailable", refresh the page and the clip should load.</p>
+						
 					</div>
 				</div>
 				`)
