@@ -16,7 +16,9 @@ const source = {
 			"vy9iZZ9FmLo", /* prapal chelovek */
 			"eV3_TMdSMK8", /* kas ce pareina */
 			"QUPopBp2iYk", /* kas ce pareina 2 */
-			"OIEuLLC2SmQ" /* ugnius kabum */
+			"OIEuLLC2SmQ", /* ugnius kabum */
+			"giEaw2B2AIs", /* Sveikas (rocket league clip) */
+			"1E8JjIrOf_g"  /* perfect apsisukimas (rocket league clip) */
 		],
 		medal: [
 			
