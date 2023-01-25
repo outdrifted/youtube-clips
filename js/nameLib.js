@@ -51,7 +51,7 @@ const nameLib = {
 	"GarklOn": {
 		"aliases": ["garklon", "gvidas bo"],
 		"link": "https://steamcommunity.com/profiles/76561198199183528",
-		"icon": "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/items/1504020/5f89df05b4d4463f9fd2aac1fe5bafc836d1ffdf.gif",
+		"icon": "https://avatars.akamai.steamstatic.com/9367531e5422ca018a409d3cc276fb9f3cdc19df_full.jpg",
 		"profile": {
 			"banner": "https://cdn.discordapp.com/attachments/342948415438585856/1003371290507358258/Twitch_Banneris.png"
 		}
