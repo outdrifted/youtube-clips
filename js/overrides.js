@@ -26,5 +26,7 @@ const overrides = { // Override data on certain clips.
         people: ['jungy', 'GarklOn', 'yummy'],
         game: 'Rocket League',
         dateRecorded: "2021-06-22"
-    }
+    },
+    "1E8JjIrOf_g": { people: ['jungy', 'GarklOn'], game: 'Rocket League', dateRecorded: "2021-06-23" },
+    "giEaw2B2AIs": { people: ['jungy', 'GarklOn'], game: 'Rocket League', dateRecorded: "2021-06-23" }
 }
