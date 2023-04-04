@@ -157,6 +157,25 @@ $(document).ready(function() {
 			videos.push(formatVideosMedal(data));
 		}
 		//#endregion
+		
+		//#region Get Medal.tv videos via Medal API https://docs.medal.tv/api#v1latest---latest-clips-from-a-user-or-game
+		for (const videoID of source.playlists.medal) {
+			var data = undefined;
+
+			await $.ajax({
+				beforeSend: function(request) {
+					request.setRequestHeader("Authorization", 'pub_9SLaE4VYcyGj3kKZhkIfe5cSNT9r5614');
+				},
+				dataType: "json",
+				url: `https://developers.medal.tv/v1/latest?directClipUrl=${"https:\/\/medal.tv\/clips\/" + videoID}`,
+				success: function(returned) {
+					data = returned;
+				}
+			});
+			
+			videos.push(formatVideosMedal(data));
+		}
+		//#endregion
 
 		videosNoPrivate = videos;
 
