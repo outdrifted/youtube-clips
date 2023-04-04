@@ -159,7 +159,7 @@ $(document).ready(function() {
 		//#endregion
 		
 		//#region Get Medal.tv videos via Medal API https://docs.medal.tv/api#v1latest---latest-clips-from-a-user-or-game
-		for (const videoID of source.playlists.medal) {
+		for (const videoID of source.clips.medal) {
 			var data = undefined;
 
 			await $.ajax({
