@@ -21,7 +21,8 @@ const source = {
 			"1E8JjIrOf_g"  /* perfect apsisukimas (rocket league clip) */
 		],
 		medal: [
-			"2f0VT4vZFXhHx/ljCn5kRHaIS0", /* koja nusidauziau */
+			"2f0VT4vZFXhHx", /* koja nusidauziau */
+			"nSv90UdBiRbNR" /* faceit pro league */
 		]
 	}
 }
