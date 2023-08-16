@@ -116,5 +116,10 @@ const gameLib = {
 		"aliases": ["prey"],
 		"link": "https://store.steampowered.com/app/480490/Prey/",
 		"icon": "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/480490/5ef565e374f039469e4a5c332cd51584af7ec5db.jpg"
+	},
+	"Roblox": {
+		"aliases": ["roblox"],
+		"link": "https://roblox.com/",
+		"icon": "https://upload.wikimedia.org/wikipedia/commons/4/48/Roblox_Logo_2021.png"
 	}
 }
