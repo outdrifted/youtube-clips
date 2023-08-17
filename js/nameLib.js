@@ -105,12 +105,12 @@ const nameLib = {
 		"icon": "https://avatars.cloudflare.steamstatic.com/0ac974c69a8387c691289e1cf1810e091e403403_full.jpg"
 	},
 	"Po": {
-		"aliases": ["neilas"],
+		"aliases": ["neilas", "po"],
 		"link": "https://steamcommunity.com/id/NeilaZ",
 		"icon": "https://avatars.akamai.steamstatic.com/c6104382835575eb5c3a0c829b5af798b2084107_full.jpg"
 	},
 	"Tinky Winky": {
-		"aliases": ["benas"],
+		"aliases": ["benas", "tinky winky"],
 		"link": "https://steamcommunity.com/profiles/76561198417138559",
 		"icon": "https://avatars.akamai.steamstatic.com/1273c01a5e7364bc3cccb2c77a78740641300783_full.jpg"
 	}
