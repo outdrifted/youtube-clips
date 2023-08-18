@@ -549,8 +549,6 @@ $(document).ready(function() {
 							<td>${formatDate(video.dateRecorded)}</td>
 						</tr>` : ""}
 						</table>
-						<br>
-						
 					</div>
 				</div>
 				`)
