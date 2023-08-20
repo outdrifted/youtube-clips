@@ -915,6 +915,7 @@ $(document).ready(function() {
 
 	$('body').on('click','#footer-more',function(){
 		$('#footer-more').remove();
+		$(`.main`).append(`<a href="mailto:contact@outdrifted.com">Contact web admin: contact@outdrifted.com</a><br>`)
 		if (selected_vid) {
 			if (selected_vid.type == "medal") {
 				$(`.main`).append(`Direct link: <a href="https://medal.tv/clips/${selected_vid.id}">https://medal.tv/clips/${selected_vid.id}</a><br>`)
@@ -922,7 +923,6 @@ $(document).ready(function() {
 				$(`.main`).append(`Video direct link: <a href="https://youtube.com/watch?v=${selected_vid.id}">https://youtube.com/watch?v=${selected_vid.id}</a><br>`)
 			}
 		}
-		$(`.main`).append(`<a href="mailto:contact@outdrifted.com">Contact web admin: contact@outdrifted.com</a>`)
 		$(`.main`).append(`Favicon made by <a href="https://www.flaticon.com/authors/prosymbols-premium" title="Prosymbols Premium">Prosymbols Premium</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a><hr>`)
 		$(`.main`).append(`nameLib.js<pre class="footer-code">${JSON.stringify(nameLib, null, `\t`)}</pre>`)
 		$(`.main`).append(`gameLib.js<pre class="footer-code">${JSON.stringify(gameLib, null, `\t`)}</pre>`)
