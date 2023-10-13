@@ -17,6 +17,11 @@ const gameLib = {
 		"link": "https://store.steampowered.com/app/730/CounterStrike_Global_Offensive/",
 		"icon": "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/730/69f7ebe2735c366c65c0b33dae00e12dc40edbe4.jpg"
 	},
+	"CS2": {
+		"aliases": ["cs2"],
+		"link": "https://store.steampowered.com/app/730/CounterStrike_2/",
+		"icon": "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/730/8dbc71957312bbd3baea65848b545be9eae2a355.jpg"
+	},
 	"Sea of Thieves": {
 		"aliases": ["sot", "sea of thieves", 320],
 		"link": "https://store.steampowered.com/app/1172620/Sea_of_Thieves/",
