@@ -7,6 +7,11 @@ const gameLib = {
 		"link": "https://www.epicgames.com/store/en-US/p/rocket-league",
 		"icon": "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/252950/9ad6dd3d173523354385955b5fb2af87639c4163.jpg"
 	},
+	"Minecraft": {
+		"aliases": ["minecraft", "mc"],
+		"link": "https://www.minecraft.net/",
+		"icon": "https://cdn.icon-icons.com/icons2/2699/PNG/512/minecraft_logo_icon_168974.png"
+	},
 	"Deep Rock Galactic": {
 		"aliases": ["drg", "deep rock galactic", 375],
 		"link": "https://store.steampowered.com/app/548430/Deep_Rock_Galactic/",
