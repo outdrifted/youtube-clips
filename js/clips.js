@@ -86,32 +86,43 @@ $(document).ready(function() {
 				sortingReverse = "";
 				break;
 		}
-		
-		//#region Get Youtube videos via YT API
+
+		//#region Get Youtube videos via AWS API Gateway
 		for (const playlistID of source.playlists.youtube) {
 			var data = await (async function() {
-				var ret = [];
-				var ret_temp = [];
-
-				var options = {
-					part: 'snippet',
-					key: 'AIzaSyCb62u0hNUTyUtcdOi-VbZtSNtisI7uCB0',
-					maxResults: 50,
-					playlistId: playlistID,
-					url: 'https://www.googleapis.com/youtube/v3/playlistItems'
-				};
-
-				await getVids(null)
-				async function getVids(token) {
-					if (token != null) { options.pageToken = token; }
-					await $.getJSON(options.url, options, function (data) { return ret_temp.push(data); }).then(async (data) => {
+				try {
+					var ret = [];
+					var ret_temp = [];
+	
+					await getVids(null);
+					async function getVids(token) {
+						var request = `https://oql2ngv5g9.execute-api.eu-north-1.amazonaws.com/default/playlistItems?playlistID=${playlistID}`;
+						
+						if (token != null) { request += "&pageToken=" + token }
+						const response = await fetch(request, {
+							method: 'GET',
+							headers: {
+								'Content-Type': 'application/json',
+							}
+						})
+						
+						if (!response.ok) {
+							throw new Error('Network response was not ok');
+						} else {
+							console.log("Got data from AWS API Gateway (playlistItems)");
+						}
+						const data = await response.json();
+						//console.log(data);
+						ret_temp.push(data);
 						if ('nextPageToken' in data) {await getVids(data.nextPageToken)} else {ret = ret_temp };
-					});
-				}
+					}
 
-				return ret;
-			})()
-			
+					return ret;
+				} catch (error) {
+					console.error('Error fetching data:', error);
+					// Handle error as needed
+				}
+			})();
 			for (const d of data) {
 				videos.push(formatVideos(removeUnavailable(d)));
 			}
@@ -119,44 +130,45 @@ $(document).ready(function() {
 
 		for (const videoID of source.clips.youtube) {
 			await (async function() {
-				var ret = undefined;
-
-				var options = {
-					part: 'snippet',
-					key: 'AIzaSyCb62u0hNUTyUtcdOi-VbZtSNtisI7uCB0',
-					id: videoID,
-					url: 'https://www.googleapis.com/youtube/v3/videos'
-				};
 				
-				await (async function getVids() {
-					await $.getJSON(options.url, options, function (data) {return ret = data;})})()
+				const response = await fetch(`https://3w74il8whe.execute-api.eu-north-1.amazonaws.com/default/videos?videoID=${videoID}`, {
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json',
+					}
+				})
+
+				if (!response.ok) {
+					throw new Error('Network response was not ok');
+				} else {
+					console.log("Got data from AWS API Gateway (videos)");
+				}
+				const ret = await response.json();
 
 				return ret;
 			})().then(r => videos.push(formatVideos(removeUnavailable(r))))
 			
-			//console.log(data);
-			
 		}
 		//#endregion
 
-		//#region Get Medal.tv videos via Medal API https://docs.medal.tv/api#v1latest---latest-clips-from-a-user-or-game
-		for (const playlistID of source.playlists.medal) {
-			var data = undefined;
+		// //#region Get Medal.tv videos via Medal API https://docs.medal.tv/api#v1latest---latest-clips-from-a-user-or-game
+		// for (const playlistID of source.playlists.medal) {
+		// 	var data = undefined;
 
-			await $.ajax({
-				beforeSend: function(request) {
-					request.setRequestHeader("Authorization", 'pub_9SLaE4VYcyGj3kKZhkIfe5cSNT9r5614');
-				},
-				dataType: "json",
-				url: `https://developers.medal.tv/v1/latest?userId=${playlistID}&limit=1000`,
-				success: function(returned) {
-					data = returned;
-				}
-			});
+		// 	await $.ajax({
+		// 		beforeSend: function(request) {
+		// 			request.setRequestHeader("Authorization", 'api_key');
+		// 		},
+		// 		dataType: "json",
+		// 		url: `https://developers.medal.tv/v1/latest?userId=${playlistID}&limit=1000`,
+		// 		success: function(returned) {
+		// 			data = returned;
+		// 		}
+		// 	});
 			
-			videos.push(formatVideosMedal(data));
-		}
-		//#endregion
+		// 	videos.push(formatVideosMedal(data));
+		// }
+		// //#endregion
 
 		videosNoPrivate = videos;
 
@@ -172,7 +184,7 @@ $(document).ready(function() {
 		$(`.loading`).remove();
 
 		if (urlProfile) {
-			console.log(urlProfile)
+			//console.log(urlProfile)
 			// Fetch profile info
 			var name = undefined;
 			var info = undefined;
@@ -232,7 +244,7 @@ $(document).ready(function() {
 				}
 
 				//#region Clips
-				console.log(videosNoPrivate);
+				//console.log(videosNoPrivate);
 
 				videosNoPrivate.forEach(video => {
 					if (!video.people.includes(name)) return;
@@ -483,7 +495,7 @@ $(document).ready(function() {
 				var html = `<div class="video_people_detailed_list">`;
 				video.people.forEach(person => {
 					if (nameLib[person]) {
-						console.log(nameLib[person]);
+						//console.log(nameLib[person]);
 						html += `<div class="video_people_detailed"><a href="${`./?p=${person}`}"><img draggable="false" src="${nameLib[person].icon}"></img>${person}</a></div>`;
 					} else html += `<div class="video_people_detailed">${person}</div>`;
 				})
