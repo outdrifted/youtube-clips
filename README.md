@@ -1,3 +1,4 @@
+# DEMO available at: https://clips.diglys.lt/
 # YouTube Clip Viewer
 This is a static maintenance-free website allowing users to navigate one or multiple playlists through your website. It has multiple parameters you can tweak through the YouTube description such as date, people in clip, game etc.
 
