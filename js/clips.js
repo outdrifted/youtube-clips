@@ -87,6 +87,7 @@ $(document).ready(function() {
 				break;
 		}
 
+		config.api_link_playlists
 		//#region Get Youtube videos via AWS API Gateway
 		for (const playlistID of source.playlists.youtube) {
 			var data = await (async function() {
@@ -96,7 +97,7 @@ $(document).ready(function() {
 	
 					await getVids(null);
 					async function getVids(token) {
-						var request = `https://oql2ngv5g9.execute-api.eu-north-1.amazonaws.com/default/playlistItems?playlistID=${playlistID}`;
+						var request = `${config.api_link_playlists}?playlistID=${playlistID}`;
 						
 						if (token != null) { request += "&pageToken=" + token }
 						const response = await fetch(request, {
@@ -131,7 +132,7 @@ $(document).ready(function() {
 		for (const videoID of source.clips.youtube) {
 			await (async function() {
 				
-				const response = await fetch(`https://3w74il8whe.execute-api.eu-north-1.amazonaws.com/default/videos?videoID=${videoID}`, {
+				const response = await fetch(`${config.api_link_videos}?videoID=${videoID}`, {
 					method: 'GET',
 					headers: {
 						'Content-Type': 'application/json',
@@ -309,7 +310,7 @@ $(document).ready(function() {
 			}
 
 			$('.main').prepend(`
-				<div class="back">clips.outdrifted.com<a href="./" style="display: block;"><span class="link-spanner"></span></a></div>
+				<div class="back">${config.site_name}<a href="./" style="display: block;"><span class="link-spanner"></span></a></div>
 			`);
 
 			if ($(`.video`).length > 0) {
@@ -447,7 +448,7 @@ $(document).ready(function() {
 			
 			if (!video) {
 				$('.main').append(`
-				<div class="back">clips.outdrifted.com<a href="./" style="display: block;"><span class="link-spanner"></span></a></div>
+				<div class="back">${config.site_name}<a href="./" style="display: block;"><span class="link-spanner"></span></a></div>
 				<div class="error" style="border-top-left-radius: 0px; border-top-right-radius: 0px;margin:0px">Clip not found.</div>
 				`);
 			}
@@ -522,7 +523,7 @@ $(document).ready(function() {
 			if (video.type == "youtube") {
 				$('.main').append(`
 				<div class="vid-direct">
-					<div class="back">clips.outdrifted.com<a href="./" style="display: block;"><span class="link-spanner"></span></a></div>
+					<div class="back">${config.site_name}<a href="./" style="display: block;"><span class="link-spanner"></span></a></div>
 					<div class="video-player-wrapper">
 						<div class="video-player-loading">Loading...</div>
 						<iframe class="video-player" src="https://www.youtube.com/embed/${urlVideo}?rel=0&vq=hd1080&amp;playlist=${urlVideo}&amp;loop=1&amp;autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>
@@ -569,7 +570,7 @@ $(document).ready(function() {
 
 				$('.main').append(`
 				<div class="vid-direct">
-					<div class="back">clips.outdrifted.com<a href="./" style="display: block;"><span class="link-spanner"></span></a></div>
+					<div class="back">${config.site_name}<a href="./" style="display: block;"><span class="link-spanner"></span></a></div>
 					<div class="video-player-wrapper">
 						<div class="video-player-loading">Loading...</div>
 						${iframe}
@@ -633,10 +634,10 @@ $(document).ready(function() {
 
 		$(`.main`).append(`
 			<div class="footer">
-				<span id="footer-top">Outdrifted © ${new Date().getFullYear()}<br/></span>
+				<span id="footer-top">${config.site_name} © ${new Date().getFullYear()}<br/></span>
 				Clips: ${footer_clips}<br/>
-				Latest upload: <a href="./?v=${lastUpload.id}">${formatDateWithTime(lastUpload.dateAdded)} by ${lastUpload.uploadedBy}</a><br/>
-				Sources: ${source.playlists.youtube.length + source.playlists.medal.length} (${source.playlists.youtube.length} YouTube, ${source.playlists.medal.length} Medal.tv)<br/>
+				Latest upload: <a href="./?v=${lastUpload.id}">${formatDateWithTime(lastUpload.dateAdded)} by ${lastUpload.uploadedBy}</a><!--<br/>
+				Sources: ${source.playlists.youtube.length + source.playlists.medal.length} (${source.playlists.youtube.length} YouTube, ${source.playlists.medal.length} Medal.tv)--><br/>
 				Load time: ${Math.floor(performance.now()-startTimer)} ms<br/>
 				<span id="footer-more">Show more</span>
 			</div>
@@ -927,7 +928,7 @@ $(document).ready(function() {
 
 	$('body').on('click','#footer-more',function(){
 		$('#footer-more').remove();
-		$(`.main`).append(`<a href="mailto:contact@outdrifted.com">Contact web admin: contact@outdrifted.com</a><br>`)
+		$(`.main`).append(`<a href="mailto:${config.contact_email}">Contact web admin: ${config.contact_email}</a><br>`)
 		if (selected_vid) {
 			if (selected_vid.type == "medal") {
 				$(`.main`).append(`Direct link: <a href="https://medal.tv/clips/${selected_vid.id}">https://medal.tv/clips/${selected_vid.id}</a><br>`)
