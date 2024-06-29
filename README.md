@@ -91,4 +91,4 @@ In the `js` folder, there are multiple .js files.
   
 
 ## How to install
-You can host this site for free by using Netlify or Github Pages. Both of these services are completely free to use and provide a 24/7 website.
+You can host this site for free by using Netlify or Github Pages. Both of these services are completely free to use and provide a 24/7 website. You will also need to setup an API gateway, which can also be done completely free using Amazon Lambda. Install instructions and documentation coming soon.
