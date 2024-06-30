@@ -503,7 +503,7 @@ $(document).ready(function() {
 
 			videosNoPrivate.forEach(video => {
 				if (urlGame && video.game != urlGame) return;
-				console.log(urlUploader, video.uploadedBy, video.recordedBy);
+				
 				if ((urlUploader && video.uploadedBy.toLowerCase() != urlUploader.toLowerCase()) && 
 					(urlUploader && video.recordedBy.toLowerCase() != urlUploader.toLowerCase())
 				) return;
