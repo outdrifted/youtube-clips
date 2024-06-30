@@ -367,7 +367,7 @@ $(document).ready(function() {
 				videosNoPrivate.forEach(video => {
 					if (!video.people.includes(name)) return;
 					if (urlGame && video.game != urlGame) return;
-					if (urlUploader && /*video.uploadedBy*/ video.recordedBy != urlUploader) return;
+					//if (urlUploader && /*video.uploadedBy*/ video.recordedBy != urlUploader) return;
 	
 					var vid_desc = "";
 					var vid_game = ``;
@@ -503,7 +503,10 @@ $(document).ready(function() {
 
 			videosNoPrivate.forEach(video => {
 				if (urlGame && video.game != urlGame) return;
-				if (urlUploader && /*video.uploadedBy*/ video.recordedBy != urlUploader) return;
+				console.log(urlUploader, video.uploadedBy, video.recordedBy);
+				if ((urlUploader && video.uploadedBy.toLowerCase() != urlUploader.toLowerCase()) && 
+					(urlUploader && video.recordedBy.toLowerCase() != urlUploader.toLowerCase())
+				) return;
 			
 				// If video already exists, don't add it.
 				if ($(`#clip-`+video.id).length) return;
