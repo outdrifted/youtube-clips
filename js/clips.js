@@ -61,11 +61,193 @@ $(document).ready(function() {
 	})();
 	*/
 	//#endregion
-	
-	(async function() {
-		var videos = [];
-		var videosNoPrivate = [];
+
+	var videos = [];
+
+	async function getVids(playlistID, token) {
+		var request = `${config.api_link_playlists}?playlistID=${playlistID}`;
+		if (token != null) { request += "&pageToken=" + token }
+		const response = await fetch(request, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+			}
+		})
+
+		if (!response.ok) {
+			throw new Error('Network response was not ok');
+		} else {
+			console.log("Got data from AWS API Gateway (playlistItems)");
+		}
+
+		const data = await response.json();
+		if (data.nextPageToken) {
+			// Generate button to load more clips
+			$(`.load-more-button button`).attr('nextPageToken', data.nextPageToken)
+			$(`.load-more-button button`).attr('playlistID', playlistID);
+			$(`.load-more-button`).css('display', 'block');
+		} else {
+			$(`.load-more-button`).css('display', 'none');
+		}
+		return data;
+	}
+
+	async function getVid(videoID) {
+		var request = `${config.api_link_videos}?videoID=${videoID}`;
 		
+		const response = await fetch(request, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+			}
+		})
+
+		if (!response.ok) {
+			throw new Error('Network response was not ok');
+		} else {
+			console.log("Got data from AWS API Gateway (videos)");
+		}
+
+		const data = await response.json();
+		var arr = [];
+		arr.push(data.items[0]);
+		return arr;
+	}
+
+	(async function() {
+		if (urlVideo) {
+			const vid = await getVid(urlVideo);
+			
+			// Video specified
+			$(`.loading`).remove();
+			$(`.load-more-button`).css('display', 'none');
+			
+			
+			if (vid[0]==undefined) {
+				$('.main').append(`
+				<div class="back">${config.site_name}<a href="./" style="display: block;"><span class="link-spanner"></span></a></div>
+				<div class="error" style="border-top-left-radius: 0px; border-top-right-radius: 0px;margin:0px">Clip not found.</div>
+				`);
+				return;
+			}
+
+			const video = formatVideos(vid)[0];
+			selected_vid = video;
+
+			String.prototype.replaceAll = function(str1, str2, ignore) {
+				return this.replace(new RegExp(str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g,"\\$&"),(ignore?"gi":"g")),(typeof(str2)=="string")?str2.replace(/\$/g,"$$$$"):str2);
+			}
+
+			var meta_description = `<meta property="og:description" content="`;
+			if (video.game != "Other" || video.people.length || video.description) {
+				if (video.game) meta_description += `${video.game} · `
+				if (video.description) meta_description += `„${video.description}“ · `
+				if (video.people.length) meta_description += `${video.people.join(', ')} · `
+			}
+			meta_description += `${formatDate(video.dateRecorded)}" />`;
+
+			$('head').append(`
+				<meta property="og:title" content="${video.title.replaceAll(`"`, "&quot;")} | Clip by ${video.recordedBy || video.uploadedBy}" />
+				<meta property="og:url" content="${window.location.hostname}?v=${video.id}" />
+				${meta_description}
+				<meta property="og:image" content="${video.thumbnail.medium.url}" />
+			`)
+
+			$('title').html(`${video.title.replaceAll(`"`, "&quot;")} - Clips`);
+
+			// Badges
+			var privclip = "";
+			var highclip = "";
+			var newclip = "";
+			if (video.private) privclip = `<span title="This clip won't show up in the clip list. It can only be accessed via direct link." class="clip-alert">Private clip</span>`;
+			if (video.highlight) highclip = `<span title="This clip will be highlighted in the clip list." class="clip-highlighted-alert">Highlighted clip</span>`;
+			if (video.dateAddedAgo < 432000000) newclip = `<span title="This clip was uploaded in the last 5 days." class="clip-alert">New clip</span>`;
+			
+			var gameicon = "";
+			if (gameLib[video.game] && gameLib[video.game].icon) gameicon = `<span class="game-icon"><img draggable="false" src="${gameLib[video.game].icon}"></img></span>`;
+			var game_linkstart = "", game_linkend = "";
+			if (gameLib[video.game] && gameLib[video.game].link) {
+				game_linkstart = `<a href="./?g=${video.game}">`;
+				game_linkend = `</a>`;
+			}
+
+			//${video.people ? video.people.join(', ') : "No people specified."}
+			var video_people = "No people specified";
+			if (video.people) {
+				var html = `<div class="video_people_detailed_list">`;
+				video.people.forEach(person => {
+					if (nameLib[person]) {
+						//console.log(nameLib[person]);
+						html += `<div class="video_people_detailed"><a href="${`./?p=${person}`}"><img draggable="false" src="${nameLib[person].icon}"></img>${person}</a></div>`;
+					} else html += `<div class="video_people_detailed">${person}</div>`;
+				})
+				video_people = html + `</div>`;
+			}
+
+			var video_recordedby = "";
+			if (video.recordedBy != video.uploadedBy) {
+				video_recordedby = video.recordedBy;
+				if (nameLib[video_recordedby]) {
+					video_recordedby = `<div class="video_people_detailed"><a href="${`./?p=${video_recordedby}`}"><img draggable="false" src="${nameLib[video_recordedby].icon}"></img>${video_recordedby}</a></div>`;
+				}
+				video_recordedby = `<tr>
+				<td>Recorded by</td>
+				<td>${video_recordedby}</td>
+				</tr>`
+			}
+
+			var video_uploadedby = video.uploadedBy;
+			if (nameLib[video_uploadedby]) {
+				video_uploadedby = `<div class="video_people_detailed"><a href="${`./?p=${video_uploadedby}`}"><img draggable="false" src="${nameLib[video_uploadedby].icon}"></img>${video_uploadedby}</a></div>`;
+			}
+
+			$('.main').append(`
+				<div class="vid-direct">
+					<div class="back">${config.site_name}<a href="./" style="display: block;"><span class="link-spanner"></span></a></div>
+					<div class="video-player-wrapper">
+						<div class="video-player-loading">Loading...</div>
+						<iframe class="video-player" src="https://www.youtube.com/embed/${urlVideo}?rel=0&vq=hd1080&amp;playlist=${urlVideo}&amp;loop=1&amp;autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>
+					</div>
+
+					<div class="video-info">
+					<div id="main-desc">
+					<div id="vid-title">${video.title}<div class="clip-alerts">${privclip}${newclip}${highclip}</div></div>
+					<div id="vid-desc">${video.description ? `"${video.description}"` : ""}</div>
+					</div>
+						<table>
+							${video.game != "Other" ? `
+							<tr>
+								<td>Game</td>
+								<td>${game_linkstart}${gameicon}${video.game || "No game specified."}${game_linkend}</td>
+							</tr>
+							` : ``}
+							${video.people.length ? `
+							<tr>
+								<td>People in clip</td>
+								<td>${video_people}</td>
+							</tr>` : ""}
+							${video.recordedBy ? `
+							${video_recordedby}
+							` : ``}
+							<tr>
+								<td>Uploaded by</td>
+								<td>${video_uploadedby}</td>
+							</tr>
+							<tr>
+								<td>Date uploaded</td>
+								<td>${formatDateWithTime(video.dateAdded)}</td>
+							</tr>
+							${video.dateRecorded != Infinity ? `<tr>
+							<td>Date recorded</td>
+							<td>${formatDate(video.dateRecorded)}</td>
+						</tr>` : ""}
+						</table>
+					</div>
+				</div>
+				`)
+			return;
+		}
+
 		var sortingProperty = "";
 		var sortingReverse = "";
 		switch (urlSorting) {
@@ -86,97 +268,31 @@ $(document).ready(function() {
 				sortingReverse = "";
 				break;
 		}
-
-		config.api_link_playlists
+		
 		//#region Get Youtube videos via AWS API Gateway
 		for (const playlistID of source.playlists.youtube) {
 			var data = await (async function() {
 				try {
 					var ret = [];
-					var ret_temp = [];
-	
-					await getVids(null);
-					async function getVids(token) {
-						var request = `${config.api_link_playlists}?playlistID=${playlistID}`;
-						
-						if (token != null) { request += "&pageToken=" + token }
-						const response = await fetch(request, {
-							method: 'GET',
-							headers: {
-								'Content-Type': 'application/json',
-							}
-						})
-						
-						if (!response.ok) {
-							throw new Error('Network response was not ok');
-						} else {
-							console.log("Got data from AWS API Gateway (playlistItems)");
-						}
-						const data = await response.json();
-						//console.log(data);
-						ret_temp.push(data);
-						if ('nextPageToken' in data) {await getVids(data.nextPageToken)} else {ret = ret_temp };
-					}
-
+					ret.push(await getVids(playlistID, null));
 					return ret;
 				} catch (error) {
 					console.error('Error fetching data:', error);
-					// Handle error as needed
 				}
 			})();
+			
 			for (const d of data) {
 				videos.push(formatVideos(removeUnavailable(d)));
 			}
 		}
-
-		for (const videoID of source.clips.youtube) {
-			await (async function() {
-				
-				const response = await fetch(`${config.api_link_videos}?videoID=${videoID}`, {
-					method: 'GET',
-					headers: {
-						'Content-Type': 'application/json',
-					}
-				})
-
-				if (!response.ok) {
-					throw new Error('Network response was not ok');
-				} else {
-					console.log("Got data from AWS API Gateway (videos)");
-				}
-				const ret = await response.json();
-
-				return ret;
-			})().then(r => videos.push(formatVideos(removeUnavailable(r))))
-			
-		}
-		//#endregion
-
-		// //#region Get Medal.tv videos via Medal API https://docs.medal.tv/api#v1latest---latest-clips-from-a-user-or-game
-		// for (const playlistID of source.playlists.medal) {
-		// 	var data = undefined;
-
-		// 	await $.ajax({
-		// 		beforeSend: function(request) {
-		// 			request.setRequestHeader("Authorization", 'api_key');
-		// 		},
-		// 		dataType: "json",
-		// 		url: `https://developers.medal.tv/v1/latest?userId=${playlistID}&limit=1000`,
-		// 		success: function(returned) {
-		// 			data = returned;
-		// 		}
-		// 	});
-			
-		// 	videos.push(formatVideosMedal(data));
-		// }
 		// //#endregion
 
-		videosNoPrivate = videos;
+		//videosNoPrivate = videos;
 
-		var videos = [].concat.apply([], videos);
-		var videosNoPrivate = [].concat.apply([], videosNoPrivate);
+		videos = [].concat.apply([], videos);
+		//videosNoPrivate = [].concat.apply([], videosNoPrivate);
 
-		main(videos.sort(sortByProperty(`${sortingReverse}${sortingProperty}`)), removePrivates(videosNoPrivate).sort(sortByProperty(`${sortingReverse}${sortingProperty}`)));
+		main(videos.sort(sortByProperty(`${sortingReverse}${sortingProperty}`)), removePrivates(videos).sort(sortByProperty(`${sortingReverse}${sortingProperty}`)));
 	})()
 
 	var selected_vid = undefined;
@@ -185,6 +301,7 @@ $(document).ready(function() {
 		$(`.loading`).remove();
 
 		if (urlProfile) {
+			$(`.load-more-button`).css('display', 'none');
 			//console.log(urlProfile)
 			// Fetch profile info
 			var name = undefined;
@@ -316,9 +433,10 @@ $(document).ready(function() {
 			if ($(`.video`).length > 0) {
 				$(`<h1 class="profileClipsText">Clips ${name} is in:</h1>`).insertAfter(`.profileInfo`)
 			}
-		} else if (!urlVideo) {
+		} else {
 			// No video specified
 			const games = getGames(videos);
+			$('#select-game').empty();
 			if (urlGame) {
 				$('#select-game').append(`<option value="">All games</option>`);
 				games.forEach(game => {
@@ -336,6 +454,7 @@ $(document).ready(function() {
 			}
 
 			const uploaders = getUploaders(videos);
+			$('#select-uploader').empty();
 			if (urlUploader) {
 				$('#select-uploader').append(`<option value="">By Everyone</option>`);
 				uploaders.forEach(uploader => {
@@ -352,6 +471,7 @@ $(document).ready(function() {
 				})
 			}
 
+			$('#select-sort').empty();
 			if (urlSorting && (urlSorting == 1 || urlSorting == 2 || urlSorting == 3)) {
 				$('#select-sort').append(`<option value="">Sort: Recorded date ⬇️</option>`);
 				
@@ -384,6 +504,9 @@ $(document).ready(function() {
 			videosNoPrivate.forEach(video => {
 				if (urlGame && video.game != urlGame) return;
 				if (urlUploader && /*video.uploadedBy*/ video.recordedBy != urlUploader) return;
+			
+				// If video already exists, don't add it.
+				if ($(`#clip-`+video.id).length) return;
 
 				var vid_desc = "";
 				var vid_game = ``;
@@ -441,203 +564,22 @@ $(document).ready(function() {
 			}
 
 			$('title').html($(`#select-game`).find(':selected').val() ? `${$(`#select-game`).find(':selected').val()} - Clips` : "Clips");
-		} else if (urlVideo) {
-			// Video specified
-			var video = videos.find(v => v.id == urlVideo);
-			selected_vid = video;
-			
-			if (!video) {
-				$('.main').append(`
-				<div class="back">${config.site_name}<a href="./" style="display: block;"><span class="link-spanner"></span></a></div>
-				<div class="error" style="border-top-left-radius: 0px; border-top-right-radius: 0px;margin:0px">Clip not found.</div>
-				`);
-			}
-
-			String.prototype.replaceAll = function(str1, str2, ignore) {
-				return this.replace(new RegExp(str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g,"\\$&"),(ignore?"gi":"g")),(typeof(str2)=="string")?str2.replace(/\$/g,"$$$$"):str2);
-			}
-
-			var meta_description = `<meta property="og:description" content="`;
-			if (video.game != "Other" || video.people.length || video.description) {
-				if (video.game) meta_description += `${video.game} · `
-				if (video.description) meta_description += `„${video.description}“ · `
-				if (video.people.length) meta_description += `${video.people.join(', ')} · `
-			}
-			meta_description += `${formatDate(video.dateRecorded)}" />`;
-
-			$('head').append(`
-				<meta property="og:title" content="${video.title.replaceAll(`"`, "&quot;")} | Clip by ${video.recordedBy || video.uploadedBy}" />
-				<meta property="og:url" content="${window.location.hostname}?v=${video.id}" />
-				${meta_description}
-				<meta property="og:image" content="${video.thumbnail.medium.url}" />
-			`)
-
-			$('title').html(`${video.title.replaceAll(`"`, "&quot;")} - Clips`);
-
-			// Badges
-			var privclip = "";
-			var highclip = "";
-			var newclip = "";
-			if (video.private) privclip = `<span title="This clip won't show up in the clip list. It can only be accessed via direct link." class="clip-alert">Private clip</span>`;
-			if (video.highlight) highclip = `<span title="This clip will be highlighted in the clip list." class="clip-highlighted-alert">Highlighted clip</span>`;
-			if (video.dateAddedAgo < 432000000) newclip = `<span title="This clip was uploaded in the last 5 days." class="clip-alert">New clip</span>`;
-			
-			var gameicon = "";
-			if (gameLib[video.game] && gameLib[video.game].icon) gameicon = `<span class="game-icon"><img draggable="false" src="${gameLib[video.game].icon}"></img></span>`;
-			var game_linkstart = "", game_linkend = "";
-			if (gameLib[video.game] && gameLib[video.game].link) {
-				game_linkstart = `<a href="./?g=${video.game}">`;
-				game_linkend = `</a>`;
-			}
-
-			//${video.people ? video.people.join(', ') : "No people specified."}
-			var video_people = "No people specified";
-			if (video.people) {
-				var html = `<div class="video_people_detailed_list">`;
-				video.people.forEach(person => {
-					if (nameLib[person]) {
-						//console.log(nameLib[person]);
-						html += `<div class="video_people_detailed"><a href="${`./?p=${person}`}"><img draggable="false" src="${nameLib[person].icon}"></img>${person}</a></div>`;
-					} else html += `<div class="video_people_detailed">${person}</div>`;
-				})
-				video_people = html + `</div>`;
-			}
-
-			var video_recordedby = "";
-			if (video.recordedBy != video.uploadedBy) {
-				video_recordedby = video.recordedBy;
-				if (nameLib[video_recordedby]) {
-					video_recordedby = `<div class="video_people_detailed"><a href="${`./?p=${video_recordedby}`}"><img draggable="false" src="${nameLib[video_recordedby].icon}"></img>${video_recordedby}</a></div>`;
-				}
-				video_recordedby = `<tr>
-				<td>Recorded by</td>
-				<td>${video_recordedby}</td>
-				</tr>`
-			}
-
-			var video_uploadedby = video.uploadedBy;
-			if (nameLib[video_uploadedby]) {
-				video_uploadedby = `<div class="video_people_detailed"><a href="${`./?p=${video_uploadedby}`}"><img draggable="false" src="${nameLib[video_uploadedby].icon}"></img>${video_uploadedby}</a></div>`;
-			}
-
-			if (video.type == "youtube") {
-				$('.main').append(`
-				<div class="vid-direct">
-					<div class="back">${config.site_name}<a href="./" style="display: block;"><span class="link-spanner"></span></a></div>
-					<div class="video-player-wrapper">
-						<div class="video-player-loading">Loading...</div>
-						<iframe class="video-player" src="https://www.youtube.com/embed/${urlVideo}?rel=0&vq=hd1080&amp;playlist=${urlVideo}&amp;loop=1&amp;autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>
-					</div>
-
-					<div class="video-info">
-					<div id="main-desc">
-					<div id="vid-title">${video.title}<div class="clip-alerts">${privclip}${newclip}${highclip}</div></div>
-					<div id="vid-desc">${video.description ? `"${video.description}"` : ""}</div>
-					</div>
-						<table>
-							${video.game != "Other" ? `
-							<tr>
-								<td>Game</td>
-								<td>${game_linkstart}${gameicon}${video.game || "No game specified."}${game_linkend}</td>
-							</tr>
-							` : ``}
-							${video.people.length ? `
-							<tr>
-								<td>People in clip</td>
-								<td>${video_people}</td>
-							</tr>` : ""}
-							${video.recordedBy ? `
-							${video_recordedby}
-							` : ``}
-							<tr>
-								<td>Uploaded by</td>
-								<td>${video_uploadedby}</td>
-							</tr>
-							<tr>
-								<td>Date uploaded</td>
-								<td>${formatDateWithTime(video.dateAdded)}</td>
-							</tr>
-							${video.dateRecorded != Infinity ? `<tr>
-							<td>Date recorded</td>
-							<td>${formatDate(video.dateRecorded)}</td>
-						</tr>` : ""}
-						</table>
-					</div>
-				</div>
-				`)
-			} else if (video.type == "medal") {
-				var iframe = video.medalIframe.substring(0, 8) + `class="video-player"` + video.medalIframe.substring(7);
-
-				$('.main').append(`
-				<div class="vid-direct">
-					<div class="back">${config.site_name}<a href="./" style="display: block;"><span class="link-spanner"></span></a></div>
-					<div class="video-player-wrapper">
-						<div class="video-player-loading">Loading...</div>
-						${iframe}
-					</div>
-
-					<div class="video-info">
-					<div id="main-desc">
-					<div id="vid-title">${video.title}<div class="clip-alerts">${newclip}${highclip}</div></div>
-					<div id="vid-desc">${video.description ? `"${video.description}"` : ""}</div>
-					</div>
-						<table>
-							${video.game != "Other" ? `
-							<tr>
-								<td>Game</td>
-								<td>${game_linkstart}${gameicon}${video.game || "No game specified."}${game_linkend}</td>
-							</tr>
-							` : ``}
-							${video.people.length ? `
-							<tr>
-								<td>People in clip</td>
-								<td>${video_people}</td>
-							</tr>` : ""}
-							${video.recordedBy ? `
-							${video_recordedby}
-							` : ``}
-							<tr>
-								<td>Uploaded by</td>
-								<td>${video_uploadedby}</td>
-							</tr>
-							<tr>
-								<td>Date uploaded</td>
-								<td>${formatDateWithTime(video.dateAdded)}</td>
-							</tr>
-						</table>
-					</div>
-				</div>
-				`)
-			}
 		}
 
 		var lastUpload = videos.sort(sortByProperty(`-dateAdded`))[0];
-
-		/* 
-		// Dynamic Clip sources
-		var clip_sources = 0;
-		if (Object.keys(playlists).length) {
-			clip_sources = `${Object.keys(playlists).length} (`;
-
-			for (const [key, val] of Object.entries(playlists)) {
-				clip_sources += `${val.length} ${key}`;
-			}
-
-			clip_sources += ")";
-		}
-		*/
 
 		var footer_clips = videos.length;
 		if (videos.length != videosNoPrivate.length) {
 			footer_clips = `${videos.length} (${videosNoPrivate.length} public, ${videos.length - videosNoPrivate.length} private)`;
 		}
 
+		if ($(`.footer`).length) return;
 		$(`.main`).append(`
 			<div class="footer">
-				<span id="footer-top">${config.site_name} © ${new Date().getFullYear()}<br/></span>
+				<span id="footer-top">${config.site_name} © ${new Date().getFullYear()}</span><!--<br/>
 				Clips: ${footer_clips}<br/>
-				Latest upload: <a href="./?v=${lastUpload.id}">${formatDateWithTime(lastUpload.dateAdded)} by ${lastUpload.uploadedBy}</a><!--<br/>
-				Sources: ${source.playlists.youtube.length + source.playlists.medal.length} (${source.playlists.youtube.length} YouTube, ${source.playlists.medal.length} Medal.tv)--><br/>
+				Latest upload: <a href="./?v=${lastUpload.id}">${formatDateWithTime(lastUpload.dateAdded)} by ${lastUpload.uploadedBy}</a><br/>
+				Sources: ${source.playlists.youtube.length} (${source.playlists.youtube.length} YouTube)--><br/>
 				Load time: ${Math.floor(performance.now()-startTimer)} ms<br/>
 				<span id="footer-more">Show more</span>
 			</div>
@@ -657,56 +599,11 @@ $(document).ready(function() {
 	function getUploaders(videosFormatted) {
 		var result = [];
 		videosFormatted.forEach(e => {
-			if (!result.includes(e.recordedBy)) {
-				result.push(e.recordedBy);
+			if (!result.includes(e.recordedBy.toLowerCase())) {
+				result.push(e.recordedBy.toLowerCase());
 			}
 		});
 		return result;
-	}
-
-	function formatVideosMedal(videos) {
-		var vidArray = [];
-
-		videos.contentObjects.forEach(vid => {
-			var vidData = {
-				dateAdded: new Date(vid.createdTimestamp),
-				dateAddedAgo: Math.abs(new Date() - new Date(vid.createdTimestamp)),
-				description: null,
-				game: vid.categoryId,
-				highlight: false,
-				id: vid.contentId.replace('cid', ''),
-				people: [],
-				private: false,
-				thumbnail: {
-					medium: {
-						url: vid.contentThumbnail
-					}
-				},
-				title: vid.contentTitle,
-				uploadedBy: vid.credits.replace('Credits to ', '').split(' (')[0],
-				recordedBy: vid.credits.replace('Credits to ', '').split(' (')[0],
-				medalIframe: vid.embedIframeCode,
-				type: 'medal'
-			};
-
-			vidData.dateRecorded = vidData.dateAdded;
-			vidData.dateRecordedAgo = vidData.dateAddedAgo;
-
-			for (const [key, val] of Object.entries(nameLib)) {
-				if (val.aliases.includes(vid.credits.replace('Credits to ', '').split(' (')[0].toLowerCase())) {
-					vidData.uploadedBy = key
-					vidData.recordedBy = key
-				};
-			}
-
-			for (const [key, val] of Object.entries(gameLib)) {
-				if (val.aliases.includes(vid.categoryId)) vidData.game = key;
-			}
-
-			vidArray.push(vidData)
-		})
-
-		return vidArray;
 	}
 
 	function formatVideos(videos) {
@@ -721,7 +618,7 @@ $(document).ready(function() {
 				thumbnail: video.snippet.thumbnails,
 				dateAdded: video.snippet.publishedAt,
 				dateAddedAgo: Math.abs(new Date() - new Date(video.snippet.publishedAt)),
-				uploadedBy: video.snippet.channelTitle,
+				uploadedBy: video.snippet.videoOwnerChannelTitle || video.snippet.channelTitle,
 				type: 'youtube'
 			}
 
@@ -939,5 +836,47 @@ $(document).ready(function() {
 		$(`.main`).append(`Favicon made by <a href="https://www.flaticon.com/authors/prosymbols-premium" title="Prosymbols Premium">Prosymbols Premium</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a><hr>`)
 		$(`.main`).append(`nameLib.js<pre class="footer-code">${JSON.stringify(nameLib, null, `\t`)}</pre>`)
 		$(`.main`).append(`gameLib.js<pre class="footer-code">${JSON.stringify(gameLib, null, `\t`)}</pre>`)
+	});
+
+	$('body').on('click','.load-more-button button', async function(){
+		var sortingProperty = "";
+		var sortingReverse = "";
+		switch (urlSorting) {
+			case '1':
+				sortingProperty = "dateRecordedAgo";
+				sortingReverse = "-";
+				break;
+			case '2':
+				sortingProperty = "dateAddedAgo";
+				sortingReverse = "";
+				break;
+			case '3':
+				sortingProperty = "dateAddedAgo";
+				sortingReverse = "-";
+				break;
+			default:
+				sortingProperty = "dateRecordedAgo";
+				sortingReverse = "";
+				break;
+		}
+
+		var nextPageToken = $(this).attr('nextPageToken');
+		var playlistID = $(this).attr('playlistID');
+		const newVids = await getVids(playlistID, nextPageToken);
+		videos.push(formatVideos(removeUnavailable(newVids)));
+
+		videos = [].concat.apply([], videos);
+		//videosNoPrivate = [].concat.apply([], videosNoPrivate);
+		main(
+			videos.sort(
+				sortByProperty(
+					`${sortingReverse}${sortingProperty}`)
+			), 
+			removePrivates(videos).sort(
+				sortByProperty(
+					`${sortingReverse}${sortingProperty}`
+				)
+			)
+		);
 	});
 });

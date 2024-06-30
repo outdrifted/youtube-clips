@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400&display=swap');
 
+#select-sort {
+	display:none !important;
+}
+
 * {
 	margin: 0;
 	padding: 0;
@@ -24,6 +28,27 @@
 	font-size: 1.6rem;
 	margin: 6px;
 	margin-bottom: 10px;
+}
+
+.load-more-button {
+	display: flex;
+	justify-content: center;
+	margin: 6px;
+	margin-top: 50px;
+	margin-bottom: 50px;
+	display: none;
+}
+
+.load-more-button button {
+	background-color: #04AA6D; /* Green */
+	border: none;
+	color: white;
+	padding: 15px 32px;
+	text-align: center;
+	text-decoration: none;
+	font-size: 16px;
+	width: 100%;
+	cursor:pointer;
 }
 
 .profileInfo .banner {
