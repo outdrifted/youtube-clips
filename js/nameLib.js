@@ -4,9 +4,9 @@ const nameLib = {
 		"link": "https://steamcommunity.com/profiles/76561198130515965", /*Link to steam profile*/
 		"icon": "https://avatars.cloudflare.steamstatic.com/ded426e17ff06a0a6dd124b5b04691ff1c89442c_full.jpg",
 		"profile": {
-			"name": "yummy", /*name on profile page*/
+			"name": "Vilius", /*name on profile page*/
 			"banner": "https://i.pinimg.com/originals/75/12/37/751237d9a75bfbe1ba9fb681c9ed5e0d.jpg", /*photo on profile page*/
-			"url": "outdrifted", /*link to profile (can also go to it by entering an alias)*/
+			"url": "Vilius", /*link to profile (can also go to it by entering an alias)*/
 			"bio": "Dev & Admin", /*text below profile picture*/
 			"links": [ /*custom links to sites*/
 				{
