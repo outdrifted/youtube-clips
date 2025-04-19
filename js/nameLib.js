@@ -1,5 +1,5 @@
 const nameLib = {
-	"yummy": {
+	"Vilius": {
 		"aliases": ["outdrifted", "yummy", "viluhas", "džūmi", "Vilius"], /*MUST include ALL names (even the key of this object "yummy")*/
 		"link": "https://steamcommunity.com/profiles/76561198130515965", /*Link to steam profile*/
 		"icon": "https://avatars.cloudflare.steamstatic.com/ded426e17ff06a0a6dd124b5b04691ff1c89442c_full.jpg",
