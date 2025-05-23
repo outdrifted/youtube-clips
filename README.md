@@ -1,6 +1,28 @@
-### DEMO available at: [https://clipsdemo.vilius.dev/](https://clipsdemo.vilius.dev/)
 # YouTube Clip Viewer
+<p align="center">
+	<img src="https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E" alt="JavaScript Badge"/>
+	<img src="https://img.shields.io/badge/jquery-%230769AD.svg?style=for-the-badge&logo=jquery&logoColor=white" alt="jQuery Badge"/>
+	<img src="https://img.shields.io/badge/YouTube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white" alt="YouTube Badge"/>
+</p>
+<p align="center">
+	<a href="https://clipsdemo.vilius.dev/" target="_blank"> <strong>🌐 Live Demo</strong></a> 
+</p> 
+
 This is a static maintenance-free website allowing users to navigate one or multiple playlists through your website. It has multiple parameters you can tweak through the YouTube description such as date, people in clip, game etc.
+
+<p align="center">
+  <img src="https://imgur.com/7Q3U1gG.png" alt="Image 1" width="45%" style="margin-right: 10px;" />
+  <img src="https://imgur.com/zk3S05M.png" alt="Image 2" width="45%" />
+</p>
+
+
+### Features
+* **Serverless.** Doesn't require backend or database server to run, and can be hosted on static website hosting services like Github Pages.
+* **API key's aren't exposed.** We use Amazon Lambda to process requests to Google API, so API key's arent exposed to site users.
+* **Customisation.** Numerous parameters that you can tweak through the YouTube description. (see 'YouTube Description Parameters' section)
+* **Easy clip adding.** Simply add a videdo to a YouTube playlist, and it will appear on the site.
+* **User profiles.** Each user can have customisable profiles with banners, descriptions, links etc.
+* **Filters.** Clips can be filtered by game or by uploader.
 
 ## YouTube Description Parameters
 The website gathers parameters from the YouTube description, so you can specify additional information about a clip/video there. Here are the currently available parameters you can specify:
